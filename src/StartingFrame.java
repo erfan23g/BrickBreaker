@@ -1,13 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class StartingFrame extends JFrame {
 
     public StartingFrame() {
-        this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
         this.setPreferredSize(new Dimension(500, 700));
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+//        this.setLayout(null);
 
         this.add(Box.createVerticalGlue());
         this.add(Box.createRigidArea(new Dimension(0, 100))); // Adjust this to move the buttons down
@@ -33,6 +36,13 @@ public class StartingFrame extends JFrame {
         historyButton.setMaximumSize(new Dimension(250, 250));
         settingsButton.setMaximumSize(new Dimension(250, 250));
 
+        newGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new GameSettingsFrame(getLocation());
+            }
+        });
         // Align the buttons in the center horizontally
         newGameButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         historyButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
@@ -53,7 +63,7 @@ public class StartingFrame extends JFrame {
         this.pack();
 
         // Display the this
-        this.setLocationRelativeTo(null); // Center the this on screen
+        this.setLocationRelativeTo(null); // Center the frame on screen
         this.setVisible(true);
     }
 
