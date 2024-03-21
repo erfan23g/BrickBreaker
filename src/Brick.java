@@ -18,7 +18,7 @@ public class Brick extends GameObject{
     public Brick(int x, int y, int width, int height) {
         super(x, y, width, height);
         // TODO health
-        health = 10;
+        health = 50;
         // -------
         color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
     }
@@ -45,6 +45,7 @@ public class Brick extends GameObject{
         int centerY = getY() + (int) Math.round(getHeight()/2.0 + (fm.getHeight()/4.0));
 
         g.setColor(Color.BLACK);
+        g.setFont(new Font("Calibri", Font.PLAIN, 24));
         g.drawString(health + "", centerX, centerY);
     }
     public void onCollision(int ballPower){

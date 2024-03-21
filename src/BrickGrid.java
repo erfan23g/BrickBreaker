@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import javax.swing.*;
 
 public class BrickGrid extends JComponent {
+    private final int mode;
 
     private GameObject[][] grid;
     private JLabel score;
@@ -15,7 +16,8 @@ public class BrickGrid extends JComponent {
     private static final int GRID_WIDTH = 5;
     private static final int GRID_HEIGHT = 10;
 
-    public BrickGrid() {
+    public BrickGrid(int mode) {
+        this.mode = mode;
         grid = new GameObject[GRID_HEIGHT][GRID_WIDTH];
         initializeGrid();
     }
@@ -63,10 +65,11 @@ public class BrickGrid extends JComponent {
     private GameObject selectRandomBlock(int x, int y) {
         //return either an EmptyBlock, NumBlockSprite, or CoinSprite randomly
         //CoinSprite is generated with a lower probability than the other two
+
         int emptyProbability = 4;
         int numBlockProbability = 4;
-        int coinProbability = 1;
-        int totalBasket = emptyProbability + numBlockProbability;
+        int coinProbability = 0;
+        int totalBasket = emptyProbability + numBlockProbability + coinProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
         GameObject [] choices = new GameObject[totalBasket];
@@ -86,21 +89,41 @@ public class BrickGrid extends JComponent {
     private void initializeGrid() {
         int xPos = PADDING;
         int yPos = PADDING;
-        for (int c = 0; c < grid[0].length; c++){
-            grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
-            xPos += BRICK_WIDTH + PADDING;
-        }
-        xPos = PADDING;
-        yPos += BRICK_HEIGHT + PADDING;
+//        for (int c = 0; c < grid[0].length; c++){
+//            grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+//            xPos += BRICK_WIDTH + PADDING;
+//        }
+//        xPos = PADDING;
+//        yPos += BRICK_HEIGHT + PADDING;
         //initialize top rows with random blocks
-        for (int c = 0; c < grid[1].length; c++) {
-            grid[1][c] = selectRandomBlock(xPos, yPos);
+        for (int c = 0; c < grid[0].length; c++) {
+            if (c == grid[0].length - 1){
+                boolean noBrick = true;
+                boolean allBrick = true;
+                for (GameObject obj : grid[0]){
+                    if (obj instanceof Brick){
+                        noBrick = false;
+                        break;
+                    } else {
+                        allBrick = false;
+                    }
+                }
+                if (noBrick){
+                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                } else if (allBrick) {
+                    grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                } else {
+                    grid[0][c] = selectRandomBlock(xPos, yPos);
+                }
+            } else {
+                grid[0][c] = selectRandomBlock(xPos, yPos);
+            }
             xPos += BRICK_WIDTH + PADDING;
         }
         xPos = PADDING;
         yPos += BRICK_HEIGHT + PADDING;
         //leave the bottom few rows empty on game start
-        for (int r = 2; r < grid.length; r++) {
+        for (int r = 1; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
                 grid[r][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
                 xPos += BRICK_WIDTH + PADDING;
@@ -111,12 +134,6 @@ public class BrickGrid extends JComponent {
     }
 
     public void nextRound() {
-        int xPos = PADDING;
-        int yPos = PADDING;
-        for (int i = 0; i < grid[0].length; i++) {
-            grid[0][i] = selectRandomBlock(xPos, yPos);
-            xPos += BRICK_WIDTH + PADDING;
-        }
         //shift all the elements in the grid down by 1 row
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
@@ -142,6 +159,32 @@ public class BrickGrid extends JComponent {
         }
 
         //fill in the top row with new randomly generated blocks
+        int xPos = PADDING;
+        int yPos = PADDING;
+        for (int c = 0; c < grid[0].length; c++) {
+            if (c == grid[0].length - 1){
+                boolean noBrick = true;
+                boolean allBrick = true;
+                for (GameObject obj : grid[0]){
+                    if (obj instanceof Brick){
+                        noBrick = false;
+                        break;
+                    } else {
+                        allBrick = false;
+                    }
+                }
+                if (noBrick){
+                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                } else if (allBrick) {
+                    grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                } else {
+                    grid[0][c] = selectRandomBlock(xPos, yPos);
+                }
+            } else {
+                grid[0][c] = selectRandomBlock(xPos, yPos);
+            }
+            xPos += BRICK_WIDTH + PADDING;
+        }
 //        incrementScore();
     }
 
@@ -155,6 +198,14 @@ public class BrickGrid extends JComponent {
             }
         }
         return false;
+    }
+
+    public void moveObjects(int speed){
+        for (GameObject[] row : grid){
+            for (GameObject object : row){
+                object.setY(object.getY() + speed);
+            }
+        }
     }
 
 //    private void incrementScore() {

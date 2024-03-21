@@ -20,7 +20,7 @@ public class GameFrame extends JFrame {
         infoPanel.setBackground(Color.CYAN);
         this.add(infoPanel, BorderLayout.NORTH);
         // -------------------
-        this.add(new PlayingPanel(ballColor), BorderLayout.SOUTH);
+        this.add(new PlayingPanel(ballColor, mode), BorderLayout.SOUTH);
 
 
         this.setVisible(true);

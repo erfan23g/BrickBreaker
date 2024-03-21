@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import java.util.TreeSet;
 
 public class PlayingPanel extends JPanel {
+    private final int mode;
     BrickGrid grid;
     private boolean launched;
     private PreviewLine line;
@@ -14,11 +15,13 @@ public class PlayingPanel extends JPanel {
     private final int PANEL_WIDTH = 500;
     private final int PANEL_HEIGHT = 600;
     private final int ballDiameter = 20;
-    private  int ballSpeed = 10;
+    private int ballSpeed = 10;
+    private final int brickSpeed;
     private ArrayList<Ball> balls;
-    private Timer timer;
-    public PlayingPanel(Color ballColor){
-        this.grid = new BrickGrid();
+    private Timer timer, timer2;
+    public PlayingPanel(Color ballColor, int mode){
+        this.mode = mode;
+        this.grid = new BrickGrid(mode);
         this.ballColor = ballColor;
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         balls = new ArrayList<>();
@@ -26,6 +29,10 @@ public class PlayingPanel extends JPanel {
         this.line = new PreviewLine();
         line.setX1(balls.get(0).getX() + ballDiameter/2);
         line.setY1(balls.get(0).getY() + ballDiameter/2);
+        brickSpeed = switch (mode){case 1 -> 2; case 2 -> 5; case 3 -> 8;
+            default -> throw new IllegalStateException("Unexpected value: " + mode);
+        };
+        
         this.timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -36,6 +43,15 @@ public class PlayingPanel extends JPanel {
                     }
                 }
                 repaint();
+            }
+        });
+        this.timer2 = new Timer(400, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!launched){
+                    grid.moveObjects(brickSpeed);
+                    repaint();
+                }
             }
         });
         addMouseListener(new MouseAdapter() {
@@ -77,6 +93,7 @@ public class PlayingPanel extends JPanel {
             }
         });
         timer.start();
+        timer2.start();
     }
     public void paint(Graphics g){
         grid.paint(g);
@@ -85,6 +102,8 @@ public class PlayingPanel extends JPanel {
         }
         if (!launched){
             line.paintComponent(g);
+            g.setFont(new Font("Calibri", Font.PLAIN, 16));
+            g.drawString(balls.size() + " ×", balls.getFirst().getX() - 30, balls.getFirst().getY() + 3 * ballDiameter / 4);
         }
     }
     private void setLaunchReadyWithDelay() {

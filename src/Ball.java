@@ -126,11 +126,11 @@ public class Ball {
     }
 
     public Direction hitObjDirection(GameObject o) {
-        double dx = o.getX() + o.getWidth() / 2 - (getX() + diameter / 2);
-        double dy = o.getY() + o.getHeight() / 2 - (getY() + diameter / 2);
+        double dx = o.getX() + (double) o.getWidth() / 2 - (getX() + (double) diameter / 2);
+        double dy = o.getY() + (double) o.getHeight() / 2 - (getY() + (double) diameter / 2);
 
         double theta = Math.acos(dx / (Math.sqrt(dx * dx + dy * dy)));
-        double diagTheta = Math.atan2(diameter / 2, diameter / 2);
+        double diagTheta = Math.atan2((double) diameter / 2, (double) diameter / 2);
 
         if (theta <= diagTheta) {
             return Direction.RIGHT;
