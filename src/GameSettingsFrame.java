@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GameSettingsFrame extends JFrame {
-    private int gameMode;
+    private int gameMode = 0;
     private Color ballColor = Color.black;
     public GameSettingsFrame(Point p){
         this.setLocation(p);
@@ -84,7 +84,23 @@ public class GameSettingsFrame extends JFrame {
         startButton.setFont(new Font("Calibri", Font.PLAIN, 15));
         startButton.setBounds(150, 420, 200, 100);
         startButton.setHorizontalAlignment(JButton.CENTER);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (gameMode == 0){
+                    JOptionPane.showMessageDialog(null, "You have to choose a game mode", "Error", JOptionPane.PLAIN_MESSAGE);
+
+                } else if (textField.getText().equals("Name") || textField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "You have to enter your name", "Error", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    dispose();
+                    new GameFrame(textField.getText(), ballColor, gameMode, getLocation());
+                }
+            }
+        });
         this.add(startButton);
+
+
         this.setVisible(true);
     }
 }
