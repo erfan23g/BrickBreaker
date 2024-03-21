@@ -42,4 +42,5 @@ public abstract class GameObject {
         this.height = height;
     }
     public abstract void draw(Graphics g);
+    public abstract void onCollision(int ballPower);
 }

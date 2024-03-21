@@ -108,6 +108,21 @@ public class PlayingPanel extends JPanel {
         if (ball.isActive()){
             ball.move();
             ball.bounce(ball.hitWallDirection());
+            for (int i = 0; i < grid.getGrid().length; i++){
+                for (int j = 0; j < grid.getGrid()[i].length; j++){
+                    GameObject obj = grid.getGrid()[i][j];
+                    if (ball.collidesWith(obj)){
+                        if (obj instanceof Brick){
+                            obj.onCollision(1);
+                            ball.bounce(ball.hitObjDirection(obj));
+                            if (((Brick) obj).isReadyToBeDestroyed()) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                        }
+                    }
+                }
+            }
+
             if (ball.hitsFloor()){
                 ball.setActive(false);
                 ball.setLaunchReady(false);
@@ -115,6 +130,9 @@ public class PlayingPanel extends JPanel {
                 for (Ball ball1 : balls){
                     if (ball1.isActive()){
                         launchEnded = false;
+                    } else {
+                        ball.setX(ball1.getX());
+                        ball.setY(ball1.getY());
                     }
                 }
                 if (launchEnded){

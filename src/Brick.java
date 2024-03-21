@@ -2,12 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Brick extends GameObject{
+    private boolean readyToBeDestroyed;
+
+    public boolean isReadyToBeDestroyed() {
+        return readyToBeDestroyed;
+    }
+
+    public void setReadyToBeDestroyed(boolean readyToBeDestroyed) {
+        this.readyToBeDestroyed = readyToBeDestroyed;
+    }
+
     private int health;
     private final Color color;
 
     public Brick(int x, int y, int width, int height) {
         super(x, y, width, height);
         // TODO health
+        health = 10;
+        // -------
         color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
     }
 
@@ -34,5 +46,13 @@ public class Brick extends GameObject{
 
         g.setColor(Color.BLACK);
         g.drawString(health + "", centerX, centerY);
+    }
+    public void onCollision(int ballPower){
+        if (health > 0) {
+            health -= ballPower;
+        }
+        if (health == 0){
+            setReadyToBeDestroyed(true);
+        }
     }
 }

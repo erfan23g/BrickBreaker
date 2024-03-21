@@ -15,4 +15,7 @@ public class EmptyObject extends GameObject{
         g.setColor(transparent);
         g.drawRect(getX(), getY(), getWidth(), getHeight());
     }
+    public  void onCollision(int ballPower){
+
+    }
 }

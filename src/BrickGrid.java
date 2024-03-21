@@ -2,8 +2,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class BrickGrid extends JComponent {
 
@@ -11,7 +10,7 @@ public class BrickGrid extends JComponent {
     private JLabel score;
     private static final int PADDING = 5;
     private static final int BRICK_WIDTH = 94;
-    private static final int BRICK_HEIGHT = 50;
+    private static final int BRICK_HEIGHT = 54;
     private static final int COIN_DIAMETER = 12;
     private static final int GRID_WIDTH = 5;
     private static final int GRID_HEIGHT = 10;
@@ -138,22 +137,25 @@ public class BrickGrid extends JComponent {
                 grid[r][c] = copy[r-1][c];
             }
         }
+        if (isGameOver()){
+            JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
+        }
 
         //fill in the top row with new randomly generated blocks
 //        incrementScore();
     }
 
 
-//    public boolean isGameOver() {
-//        //check if bottom row is empty
-//        int lastRow = grid.length - 1;
-//        for (int i = 0; i < grid[lastRow].length; i++) {
-//            if (grid[lastRow][i] instanceof NumBlockSprite) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean isGameOver() {
+        //check if bottom row is empty
+        int lastRow = grid.length - 1;
+        for (int i = 0; i < grid[lastRow].length; i++) {
+            if (grid[lastRow][i] instanceof Brick) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 //    private void incrementScore() {
 //        int currentScore = Integer.parseInt(score.getText());

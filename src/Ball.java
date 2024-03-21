@@ -3,7 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-public class Ball  {
+public class Ball {
     private final Color color;
     private int x;
     private int y;
@@ -79,13 +79,13 @@ public class Ball  {
     }
 
 
-
     //checks if the ball hits the floor
     //returns true only if the ball hits the floor while coming downward
     public boolean hitsFloor() {
         return getY() + this.vy >= this.maxY
                 && getY() < this.maxY;
     }
+
     public void bounce(Direction d) {
         if (d == null) return;
 
@@ -104,6 +104,7 @@ public class Ball  {
                 break;
         }
     }
+
     public Direction hitWallDirection() {
         if (getX() + this.vx < 0) {
             return Direction.LEFT;
@@ -112,9 +113,36 @@ public class Ball  {
         }
         if (getY() + this.vy < 0) {
             return Direction.UP;
-        }
-        else {
+        } else {
             return null;
+        }
+    }
+
+    public boolean collidesWith(GameObject o) {
+        return (getX() + diameter >= o.getX()
+                && getY() + diameter >= o.getY()
+                && o.getX() + o.getWidth() >= getX()
+                && o.getY() + o.getHeight() >= getY());
+    }
+
+    public Direction hitObjDirection(GameObject o) {
+        double dx = o.getX() + o.getWidth() / 2 - (getX() + diameter / 2);
+        double dy = o.getY() + o.getHeight() / 2 - (getY() + diameter / 2);
+
+        double theta = Math.acos(dx / (Math.sqrt(dx * dx + dy * dy)));
+        double diagTheta = Math.atan2(diameter / 2, diameter / 2);
+
+        if (theta <= diagTheta) {
+            return Direction.RIGHT;
+        } else if (theta > diagTheta && theta <= Math.PI - diagTheta) {
+            // Coordinate system for GUIs is switched
+            if (dy > 0) {
+                return Direction.DOWN;
+            } else {
+                return Direction.UP;
+            }
+        } else {
+            return Direction.LEFT;
         }
     }
 
@@ -138,9 +166,10 @@ public class Ball  {
         return this.maxX;
     }
 
-    public int getMaxY(){
+    public int getMaxY() {
         return this.maxY;
     }
+
     public void setLaunchReady(boolean launchReady) {
         this.launchReady = launchReady;
     }
