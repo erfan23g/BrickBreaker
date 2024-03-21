@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import java.util.TreeSet;
 
 public class PlayingPanel extends JPanel {
+    BrickGrid grid;
     private boolean launched;
     private PreviewLine line;
     private final Color ballColor;
@@ -17,6 +18,7 @@ public class PlayingPanel extends JPanel {
     private ArrayList<Ball> balls;
     private Timer timer;
     public PlayingPanel(Color ballColor){
+        this.grid = new BrickGrid();
         this.ballColor = ballColor;
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         balls = new ArrayList<>();
@@ -27,22 +29,11 @@ public class PlayingPanel extends JPanel {
         this.timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Ball ball : balls) {
+                ArrayList<Ball> tmp = new ArrayList<>(balls);
+                for (Ball ball : tmp) {
                     if (ball.isLaunchReady()) {
                         launch(ball);
                     }
-                }
-                boolean launchedtmp = false;
-                for (Ball ball : balls){
-                    if (ball.isActive()){
-                        launchedtmp = true;
-                    }
-                }
-                launched = launchedtmp;
-                if (!launchedtmp){
-                    line.setX1(balls.get(0).getX() + ballDiameter/2);
-                    line.setY1(balls.get(0).getY() + ballDiameter/2);
-                    balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
                 }
                 repaint();
             }
@@ -88,6 +79,7 @@ public class PlayingPanel extends JPanel {
         timer.start();
     }
     public void paint(Graphics g){
+        grid.paint(g);
         for (Ball ball : balls){
             ball.draw(g);
         }
@@ -119,6 +111,19 @@ public class PlayingPanel extends JPanel {
             if (ball.hitsFloor()){
                 ball.setActive(false);
                 ball.setLaunchReady(false);
+                boolean launchEnded = true;
+                for (Ball ball1 : balls){
+                    if (ball1.isActive()){
+                        launchEnded = false;
+                    }
+                }
+                if (launchEnded){
+                    launched = false;
+                    line.setX1(balls.get(0).getX() + ballDiameter/2);
+                    line.setY1(balls.get(0).getY() + ballDiameter/2);
+                    balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
+                    grid.nextRound();
+                }
             }
         }
     }
