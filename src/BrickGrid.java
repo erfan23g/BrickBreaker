@@ -79,8 +79,8 @@ public class BrickGrid extends JComponent {
 
         int emptyProbability = 4;
         int numBlockProbability = 4;
-        int coinProbability = 0;
-        int totalBasket = emptyProbability + numBlockProbability + coinProbability;
+        int BallItemProbability = 1;
+        int totalBasket = emptyProbability + numBlockProbability + BallItemProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
         GameObject [] choices = new GameObject[totalBasket];
@@ -90,10 +90,9 @@ public class BrickGrid extends JComponent {
         for (int i = 0; i < numBlockProbability; i++) {
             choices[i+emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
         }
-//        for (int i = 0; i < coinProbability; i++) {
-//            choices[i+emptyProbability+numBlockProbability] = new CoinSprite(x, y,
-//                    COIN_DIAMETER, BLOCK_SIDE_LENGTH);
-//        }
+        for (int i = 0; i < BallItemProbability; i++) {
+            choices[i+emptyProbability+numBlockProbability] = new BallNormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+        }
         return choices[randomNumber];
     }
 

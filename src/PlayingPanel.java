@@ -8,6 +8,8 @@ import java.util.TreeSet;
 
 public class PlayingPanel extends JPanel {
     private final int mode;
+    private int ballPower;
+    private int ballsToAdd = 0;
     BrickGrid grid;
     private boolean launched;
     private PreviewLine line;
@@ -20,6 +22,7 @@ public class PlayingPanel extends JPanel {
     private ArrayList<Ball> balls;
     private Timer timer, timer2;
     public PlayingPanel(Color ballColor, int mode){
+        this.ballPower = 1;
         this.mode = mode;
         this.grid = new BrickGrid(mode);
         this.ballColor = ballColor;
@@ -135,11 +138,17 @@ public class PlayingPanel extends JPanel {
                     GameObject obj = grid.getGrid()[i][j];
                     if (ball.collidesWith(obj)){
                         if (obj instanceof Brick){
-                            obj.onCollision(1);
+                            obj.onCollision(ballPower);
                             ball.bounce(ball.hitObjDirection(obj));
                             if (((Brick) obj).isReadyToBeDestroyed()) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                             }
+                        } else if (obj instanceof BallNormalItem) {
+                            obj.onCollision(ballPower);
+                            if (((BallNormalItem) obj).isReadyToBeDestroyed()) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            ballsToAdd++;
                         }
                     }
                 }
@@ -164,6 +173,10 @@ public class PlayingPanel extends JPanel {
                     balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
                     grid.nextRound(true);
                     grid.setLevel(grid.getLevel() + 1);
+                    for (int i = 0; i < ballsToAdd; i++){
+                        balls.add(new Ball(balls.getFirst().getX(), balls.getFirst().getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
+                    }
+                    ballsToAdd = 0;
                 }
             }
         }
