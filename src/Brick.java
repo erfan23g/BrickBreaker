@@ -15,10 +15,24 @@ public class Brick extends GameObject{
     private int health;
     private final Color color;
 
-    public Brick(int x, int y, int width, int height) {
+    public Brick(int x, int y, int width, int height, int mode, int level) {
         super(x, y, width, height);
         // TODO health
-        health = 50;
+        int rnd = (int) (Math.random() * 9);
+        switch (mode){
+            case 1:
+                health = level + rnd - 6;
+                break;
+            case 2:
+                health = level + rnd - 4;
+                break;
+            case 3:
+                health = level + rnd - 2;
+                break;
+            default:
+                health = level;
+        }
+        health = Math.max(health, 1);
         // -------
         color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
     }

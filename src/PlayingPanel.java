@@ -29,10 +29,10 @@ public class PlayingPanel extends JPanel {
         this.line = new PreviewLine();
         line.setX1(balls.get(0).getX() + ballDiameter/2);
         line.setY1(balls.get(0).getY() + ballDiameter/2);
-        brickSpeed = switch (mode){case 1 -> 2; case 2 -> 5; case 3 -> 8;
-            default -> throw new IllegalStateException("Unexpected value: " + mode);
-        };
-        
+//        brickSpeed = switch (mode){case 1 -> 1; case 2 -> 2; case 3 -> 4;
+//            default -> throw new IllegalStateException("Unexpected value: " + mode);
+//        };
+        brickSpeed = mode;
         this.timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,10 +42,13 @@ public class PlayingPanel extends JPanel {
                         launch(ball);
                     }
                 }
+                if (grid.isReadyToEnd()){
+                    closeFrame();
+                }
                 repaint();
             }
         });
-        this.timer2 = new Timer(400, new ActionListener() {
+        this.timer2 = new Timer(30, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!launched){
@@ -159,9 +162,18 @@ public class PlayingPanel extends JPanel {
                     line.setX1(balls.get(0).getX() + ballDiameter/2);
                     line.setY1(balls.get(0).getY() + ballDiameter/2);
                     balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
-                    grid.nextRound();
+                    grid.nextRound(true);
+                    grid.setLevel(grid.getLevel() + 1);
                 }
             }
+        }
+    }
+    public void closeFrame(){
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            frame.dispose();
+            timer.stop();
+            timer2.stop();
         }
     }
 }

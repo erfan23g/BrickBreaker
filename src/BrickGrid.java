@@ -5,8 +5,9 @@ import java.awt.Graphics;
 import javax.swing.*;
 
 public class BrickGrid extends JComponent {
+    private int level;
     private final int mode;
-
+    private boolean readyToEnd;
     private GameObject[][] grid;
     private JLabel score;
     private static final int PADDING = 5;
@@ -16,8 +17,18 @@ public class BrickGrid extends JComponent {
     private static final int GRID_WIDTH = 5;
     private static final int GRID_HEIGHT = 10;
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public BrickGrid(int mode) {
+        this.level = 0;
         this.mode = mode;
+        this.readyToEnd = false;
         grid = new GameObject[GRID_HEIGHT][GRID_WIDTH];
         initializeGrid();
     }
@@ -77,7 +88,7 @@ public class BrickGrid extends JComponent {
             choices[i] = new EmptyObject(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         }
         for (int i = 0; i < numBlockProbability; i++) {
-            choices[i+emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+            choices[i+emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
         }
 //        for (int i = 0; i < coinProbability; i++) {
 //            choices[i+emptyProbability+numBlockProbability] = new CoinSprite(x, y,
@@ -109,7 +120,7 @@ public class BrickGrid extends JComponent {
                     }
                 }
                 if (noBrick){
-                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
                 } else if (allBrick) {
                     grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
                 } else {
@@ -133,12 +144,14 @@ public class BrickGrid extends JComponent {
         }
     }
 
-    public void nextRound() {
-        //shift all the elements in the grid down by 1 row
-        for (int r = 0; r < grid.length; r++) {
-            for (int c = 0; c < grid[r].length; c++) {
-                int currentY = grid[r][c].getY();
-                grid[r][c].setY(currentY+BRICK_HEIGHT+PADDING);
+    public void nextRound(boolean shift) {
+        if (shift){
+            //shift all the elements in the grid down by 1 row
+            for (int r = 0; r < grid.length; r++) {
+                for (int c = 0; c < grid[r].length; c++) {
+                    int currentY = grid[r][c].getY();
+                    grid[r][c].setY(currentY+BRICK_HEIGHT+PADDING);
+                }
             }
         }
         //store all the shifted elements in a temp 2d array
@@ -156,6 +169,7 @@ public class BrickGrid extends JComponent {
         }
         if (isGameOver()){
             JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
+            setReadyToEnd(true);
         }
 
         //fill in the top row with new randomly generated blocks
@@ -174,7 +188,7 @@ public class BrickGrid extends JComponent {
                     }
                 }
                 if (noBrick){
-                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
+                    grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
                 } else if (allBrick) {
                     grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
                 } else {
@@ -204,7 +218,14 @@ public class BrickGrid extends JComponent {
         for (GameObject[] row : grid){
             for (GameObject object : row){
                 object.setY(object.getY() + speed);
+                if (object instanceof Brick && object.getY() >= 536){
+                    JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
+                    setReadyToEnd(true);
+                }
             }
+        }
+        if (grid[0][0].getY() >= 64){
+            nextRound(false);
         }
     }
 
@@ -212,4 +233,13 @@ public class BrickGrid extends JComponent {
 //        int currentScore = Integer.parseInt(score.getText());
 //        score.setText(currentScore+1+"");
 //    }
+
+
+    public boolean isReadyToEnd() {
+        return readyToEnd;
+    }
+
+    public void setReadyToEnd(boolean readyToEnd) {
+        this.readyToEnd = readyToEnd;
+    }
 }
