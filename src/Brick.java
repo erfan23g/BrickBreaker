@@ -66,7 +66,7 @@ public class Brick extends GameObject{
         if (health > 0) {
             health -= ballPower;
         }
-        if (health == 0){
+        if (health <= 0){
             setReadyToBeDestroyed(true);
         }
     }

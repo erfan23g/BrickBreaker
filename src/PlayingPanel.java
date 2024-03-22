@@ -5,8 +5,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class PlayingPanel extends JPanel {
+    public static boolean speed = false;
+    public static boolean power = false;
     private final int mode;
     private int ballPower;
     private int ballsToAdd = 0;
@@ -74,13 +80,13 @@ public class PlayingPanel extends JPanel {
 
                     //calculate vx and vy based on mouse release position
                     double angle = Math.atan2(line.getY2() - balls.getFirst().getY(), line.getX2() - balls.getFirst().getX());
-                    double vx = Math.round(ballSpeed*Math.cos(angle));
-                    double vy = Math.round(ballSpeed*Math.sin(angle));
+                    double vx = Math.round(ballSpeed * Math.cos(angle));
+                    double vy = Math.round(ballSpeed * Math.sin(angle));
 
                     for (Ball ball : balls) {
                         ball.setActive(true);
-                        ball.setVx((int)vx);
-                        ball.setVy((int)vy);
+                        ball.setVx((int) (vx));
+                        ball.setVy((int) (vy));
                     }
                 }
             }
@@ -143,12 +149,46 @@ public class PlayingPanel extends JPanel {
                             if (((Brick) obj).isReadyToBeDestroyed()) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                             }
-                        } else if (obj instanceof BallNormalItem) {
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Ball")) {
                             obj.onCollision(ballPower);
-                            if (((BallNormalItem) obj).isReadyToBeDestroyed()) {
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                             }
                             ballsToAdd++;
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Speed")) {
+                            speed = true;
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                            ballSpeed *= 2;
+                            for (Ball ball1 : balls){
+                                ball1.setVx(ball1.getVx() * 2);
+                                ball1.setVy(ball1.getVy() * 2);
+                            }
+                            scheduler.schedule(() -> {
+                                ballSpeed /= 2;
+                                for (Ball ball1 : balls){
+                                    ball1.setVx(ball1.getVx() / 2);
+                                    ball1.setVy(ball1.getVy() / 2);
+                                }
+                                speed = false;
+                            }, 15, TimeUnit.SECONDS);
+                            scheduler.shutdown();
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Power")) {
+                            power = true;
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                            ballPower *= 2;
+                            scheduler.schedule(() -> {
+                                ballPower /= 2;
+                                power = false;
+                            }, 15, TimeUnit.SECONDS);
+                            scheduler.shutdown();
                         }
                     }
                 }
