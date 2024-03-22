@@ -14,9 +14,9 @@ public class PreviewLine extends JComponent {
         this.y2 = 0;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        g.setColor(Color.black);
+
+    public void paintComponent(Graphics g, Color color) {
+        g.setColor(color);
         if (x2 != 0 && y2 != 0) {
             g.drawLine(x1, y1, x2, y2);
         }

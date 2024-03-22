@@ -13,12 +13,15 @@ import java.util.concurrent.TimeUnit;
 public class PlayingPanel extends JPanel {
     public static boolean speed = false;
     public static boolean power = false;
+    public static boolean heart = false;
+    public static boolean heart2 = false;
+    private boolean vertigo = false;
     private final int mode;
     private int ballPower;
     private int ballsToAdd = 0;
     BrickGrid grid;
     private boolean launched;
-    private PreviewLine line;
+    private final PreviewLine line, vertigoLine;
     private final Color ballColor;
     private final int PANEL_WIDTH = 500;
     private final int PANEL_HEIGHT = 600;
@@ -36,8 +39,11 @@ public class PlayingPanel extends JPanel {
         balls = new ArrayList<>();
         balls.add(new Ball((PANEL_WIDTH - ballDiameter)/2, PANEL_HEIGHT - ballDiameter, ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
         this.line = new PreviewLine();
+        this.vertigoLine = new PreviewLine();
         line.setX1(balls.get(0).getX() + ballDiameter/2);
         line.setY1(balls.get(0).getY() + ballDiameter/2);
+        vertigoLine.setX1(balls.get(0).getX() + ballDiameter/2);
+        vertigoLine.setY1(balls.get(0).getY() + ballDiameter/2);
 //        brickSpeed = switch (mode){case 1 -> 1; case 2 -> 2; case 3 -> 4;
 //            default -> throw new IllegalStateException("Unexpected value: " + mode);
 //        };
@@ -69,6 +75,7 @@ public class PlayingPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                vertigo = false;
                 if (line.getY2() >= balls.getFirst().getY() - 15) {
                     return;
                 }
@@ -100,6 +107,8 @@ public class PlayingPanel extends JPanel {
                     int mouseY = (int) e.getPoint().getY();
                     line.setX2(mouseX);
                     line.setY2(mouseY);
+                    vertigoLine.setX2((int) (Math.random() * PANEL_WIDTH));
+                    vertigoLine.setY2((int) (Math.random() * PANEL_HEIGHT));
                     repaint();
                 }
             }
@@ -113,9 +122,13 @@ public class PlayingPanel extends JPanel {
             ball.draw(g);
         }
         if (!launched){
-            line.paintComponent(g);
+            if (vertigo){
+                vertigoLine.paintComponent(g, ballColor);
+            } else {
+                line.paintComponent(g, ballColor);
+            }
             g.setFont(new Font("Calibri", Font.PLAIN, 16));
-            g.drawString(balls.size() + " ×", balls.getFirst().getX() - 30, balls.getFirst().getY() + 3 * ballDiameter / 4);
+            g.drawString(balls.size() + "×", balls.getFirst().getX(), balls.getFirst().getY() - ballDiameter / 2);
         }
     }
     private void setLaunchReadyWithDelay() {
@@ -189,6 +202,25 @@ public class PlayingPanel extends JPanel {
                                 power = false;
                             }, 15, TimeUnit.SECONDS);
                             scheduler.shutdown();
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Vertigo")) {
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            vertigo = true;
+                        }  else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Reverse")) {
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            grid.shiftUp();
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Heart")) {
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
+                            heart = true;
+                            heart2 = true;
                         }
                     }
                 }
@@ -210,6 +242,8 @@ public class PlayingPanel extends JPanel {
                     launched = false;
                     line.setX1(balls.get(0).getX() + ballDiameter/2);
                     line.setY1(balls.get(0).getY() + ballDiameter/2);
+                    vertigoLine.setX1(balls.get(0).getX() + ballDiameter/2);
+                    vertigoLine.setY1(balls.get(0).getY() + ballDiameter/2);
                     balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
                     grid.nextRound(true);
                     grid.setLevel(grid.getLevel() + 1);

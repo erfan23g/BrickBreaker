@@ -45,25 +45,25 @@ public class BrickGrid extends JComponent {
 
     @Override
     public Dimension getSize() {
-        return new Dimension(grid[0].length*(BRICK_WIDTH+PADDING)+PADDING,
-                grid.length*(BRICK_HEIGHT+PADDING)+PADDING);
+        return new Dimension(grid[0].length * (BRICK_WIDTH + PADDING) + PADDING,
+                grid.length * (BRICK_HEIGHT + PADDING) + PADDING);
     }
 
     @Override
     public int getWidth() {
-        return grid[0].length*(BRICK_WIDTH+PADDING)+PADDING;
+        return grid[0].length * (BRICK_WIDTH + PADDING) + PADDING;
     }
 
     @Override
     public int getHeight() {
-        return grid.length*(BRICK_HEIGHT+PADDING)+PADDING;
+        return grid.length * (BRICK_HEIGHT + PADDING) + PADDING;
     }
 
     public GameObject[][] getGrid() {
         return grid;
     }
 
-    public GameObject[][] getGridCopy(){
+    public GameObject[][] getGridCopy() {
         GameObject[][] copy = new GameObject[grid.length][grid[0].length];
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
@@ -83,15 +83,15 @@ public class BrickGrid extends JComponent {
         int totalBasket = emptyProbability + numBlockProbability + normalItemProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
-        GameObject [] choices = new GameObject[totalBasket];
+        GameObject[] choices = new GameObject[totalBasket];
         for (int i = 0; i < emptyProbability; i++) {
             choices[i] = new EmptyObject(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         }
         for (int i = 0; i < numBlockProbability; i++) {
-            choices[i+emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
+            choices[i + emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
         }
         for (int i = 0; i < normalItemProbability; i++) {
-            choices[i+emptyProbability+numBlockProbability] = new NormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+            choices[i + emptyProbability + numBlockProbability] = new NormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         }
         return choices[randomNumber];
     }
@@ -107,18 +107,18 @@ public class BrickGrid extends JComponent {
 //        yPos += BRICK_HEIGHT + PADDING;
         //initialize top rows with random blocks
         for (int c = 0; c < grid[0].length; c++) {
-            if (c == grid[0].length - 1){
+            if (c == grid[0].length - 1) {
                 boolean noBrick = true;
                 boolean allBrick = true;
-                for (GameObject obj : grid[0]){
-                    if (obj instanceof Brick){
+                for (GameObject obj : grid[0]) {
+                    if (obj instanceof Brick) {
                         noBrick = false;
                         break;
                     } else {
                         allBrick = false;
                     }
                 }
-                if (noBrick){
+                if (noBrick) {
                     grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
                 } else if (allBrick) {
                     grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
@@ -144,12 +144,12 @@ public class BrickGrid extends JComponent {
     }
 
     public void nextRound(boolean shift) {
-        if (shift){
+        if (shift) {
             //shift all the elements in the grid down by 1 row
             for (int r = 0; r < grid.length; r++) {
                 for (int c = 0; c < grid[r].length; c++) {
                     int currentY = grid[r][c].getY();
-                    grid[r][c].setY(currentY+BRICK_HEIGHT+PADDING);
+                    grid[r][c].setY(currentY + BRICK_HEIGHT + PADDING);
                 }
             }
         }
@@ -163,30 +163,26 @@ public class BrickGrid extends JComponent {
         //shift the actual 2d array down by 1 row, leaving out the bottom row
         for (int r = 1; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
-                grid[r][c] = copy[r-1][c];
+                grid[r][c] = copy[r - 1][c];
             }
-        }
-        if (isGameOver()){
-            JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
-            setReadyToEnd(true);
         }
 
         //fill in the top row with new randomly generated blocks
         int xPos = PADDING;
         int yPos = PADDING;
         for (int c = 0; c < grid[0].length; c++) {
-            if (c == grid[0].length - 1){
+            if (c == grid[0].length - 1) {
                 boolean noBrick = true;
                 boolean allBrick = true;
-                for (GameObject obj : grid[0]){
-                    if (obj instanceof Brick){
+                for (GameObject obj : grid[0]) {
+                    if (obj instanceof Brick) {
                         noBrick = false;
                         break;
                     } else {
                         allBrick = false;
                     }
                 }
-                if (noBrick){
+                if (noBrick) {
                     grid[0][c] = new Brick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
                 } else if (allBrick) {
                     grid[0][c] = new EmptyObject(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT);
@@ -202,36 +198,66 @@ public class BrickGrid extends JComponent {
     }
 
 
-    public boolean isGameOver() {
-        //check if bottom row is empty
-        int lastRow = grid.length - 1;
-        for (int i = 0; i < grid[lastRow].length; i++) {
-            if (grid[lastRow][i] instanceof Brick) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void moveObjects(int speed){
-        for (GameObject[] row : grid){
-            for (GameObject object : row){
+    public void moveObjects(int speed) {
+        int i = 0;
+        for (GameObject[] row : grid) {
+            for (GameObject object : row) {
                 object.setY(object.getY() + speed);
-                if (object instanceof Brick && object.getY() >= 536){
-                    JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
-                    setReadyToEnd(true);
+                if (object instanceof Brick && object.getY() >= 536) {
+                    if (PlayingPanel.heart) {
+                        for (int j = i - 3; j < GRID_HEIGHT; j++) {
+                            for (int k = 0; k < GRID_WIDTH; k++) {
+                                if (grid[j][k] instanceof Brick) {
+                                    grid[j][k] = new EmptyObject(grid[j][k].getX(), grid[j][k].getY(), BRICK_WIDTH, BRICK_HEIGHT);
+                                }
+                            }
+                        }
+                        PlayingPanel.heart = false;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
+                        setReadyToEnd(true);
+                    }
                 }
             }
+            i++;
         }
-        if (grid[0][0].getY() >= 64){
+        if (grid[0][0].getY() >= 64) {
             nextRound(false);
         }
     }
 
-//    private void incrementScore() {
-//        int currentScore = Integer.parseInt(score.getText());
-//        score.setText(currentScore+1+"");
-//    }
+    public void shiftUp() {
+//        for (int i = 0; i < 2; i++){
+//            for (int j = 0; j < GRID_WIDTH; j++){
+//                int x = grid[i][j].getX(), y = grid[i][j].getY();
+//                grid[i][j] = new EmptyObject(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+//            }
+//        }
+        for (int r = 0; r < GRID_HEIGHT; r++) {
+            for (int c = 0; c < GRID_WIDTH; c++) {
+                int currentY = grid[r][c].getY();
+                grid[r][c].setY(currentY - 2 * (BRICK_HEIGHT + PADDING));
+                if (grid[r][c].getY() < 5) {
+                    int x = grid[r][c].getX(), y = grid[r][c].getY();
+                    grid[r][c] = new EmptyObject(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+                }
+            }
+        }
+//        //store all the shifted elements in a temp 2d array
+//        GameObject[][] copy = new GameObject[grid.length][grid[0].length];
+//        for (int r = 0; r < copy.length; r++) {
+//            for (int c = 0; c < copy[r].length; c++) {
+//                copy[r][c] = grid[r][c];
+//            }
+//        }
+//        //shift the actual 2d array down by 1 row, leaving out the bottom row
+//        for (int r = 2; r < grid.length; r++) {
+//            for (int c = 0; c < grid[r].length; c++) {
+//                grid[r][c] = copy[r - 2][c];
+//            }
+//        }
+
+    }
 
 
     public boolean isReadyToEnd() {

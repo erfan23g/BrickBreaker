@@ -15,9 +15,9 @@ public class NormalItem extends GameObject{
         int ballProbability = 5;
         int speedProbability = PlayingPanel.speed ? 0 : 1;
         int powerProbability = PlayingPanel.power ? 0 : 1;
-        int vertigoProbability = 0;
-        int reverseProbability = 0;
-        int heartProbability = 0;
+        int vertigoProbability = 2;
+        int reverseProbability = 4;
+        int heartProbability = PlayingPanel.heart2 ? 0 : 3;
         int totalBasket = ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability + heartProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
@@ -38,7 +38,7 @@ public class NormalItem extends GameObject{
             choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability] = "Reverse";
         }
         for (int i = 0; i < heartProbability; i++) {
-            choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + heartProbability] = "Heart";
+            choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability] = "Heart";
         }
         return choices[randomNumber];
     }
@@ -64,6 +64,15 @@ public class NormalItem extends GameObject{
                     break;
                 case "Power":
                     g.setColor(Color.blue);
+                    break;
+                case "Vertigo":
+                    g.setColor(Color.yellow);
+                    break;
+                case "Reverse":
+                    g.setColor(Color.pink);
+                    break;
+                case "Heart":
+                    g.setColor(Color.green);
                     break;
             }
             int startX = getX() + (int) Math.round(getWidth()/2.0 - diameter/2.0);
