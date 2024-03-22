@@ -119,10 +119,17 @@ public class Ball {
     }
 
     public boolean collidesWith(GameObject o) {
-        return (getX() + diameter >= o.getX()
-                && getY() + diameter >= o.getY()
-                && o.getX() + o.getWidth() >= getX()
-                && o.getY() + o.getHeight() >= getY());
+        if (o instanceof Brick) {
+            return (getX() + diameter >= o.getX()
+                    && getY() + diameter >= o.getY()
+                    && o.getX() + o.getWidth() >= getX()
+                    && o.getY() + o.getHeight() >= getY());
+        } else {
+            return (getX() + diameter >= o.getX() + o.getWidth() / 2 - 10
+                    && getY() + diameter >= o.getY() + o.getHeight() / 2 - 10
+                    && o.getX() + o.getWidth() / 2 + 10 >= getX()
+                    && o.getY() + o.getHeight() / 2 + 10 >= getY());
+        }
     }
 
     public Direction hitObjDirection(GameObject o) {
