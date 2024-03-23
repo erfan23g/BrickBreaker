@@ -16,6 +16,7 @@ public class PlayingPanel extends JPanel {
     public static boolean heart;
     public static boolean heart2;
     public static boolean disco;
+    public static boolean earthquake;
     private boolean vertigo;
     private int ballPower;
     private int ballsToAdd;
@@ -36,6 +37,7 @@ public class PlayingPanel extends JPanel {
         heart = false;
         heart2 = false;
         disco = false;
+        earthquake = false;
         vertigo = false;
         this.ballsToAdd = 0;
         this.ballSpeed = 10;
@@ -175,6 +177,13 @@ public class PlayingPanel extends JPanel {
                                     disco = true;
                                     scheduler.schedule(() -> {
                                         disco = false;
+                                    }, 10, TimeUnit.SECONDS);
+                                    scheduler.shutdown();
+                                } else if (((Brick) obj).getType().equals("Earthquake")) {
+                                    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                                    earthquake = true;
+                                    scheduler.schedule(() -> {
+                                        earthquake = false;
                                     }, 10, TimeUnit.SECONDS);
                                     scheduler.shutdown();
                                 }

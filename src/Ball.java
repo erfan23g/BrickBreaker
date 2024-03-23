@@ -124,10 +124,17 @@ public class Ball {
 
     public boolean collidesWith(GameObject o) {
         if (o instanceof Brick) {
-            return (getX() + diameter >= o.getX()
-                    && getY() + diameter >= o.getY()
-                    && o.getX() + o.getWidth() >= getX()
-                    && o.getY() + o.getHeight() >= getY());
+            if (PlayingPanel.earthquake){
+                return (getX() + diameter >= ((Brick) o).getX2()
+                        && getY() + diameter >= ((Brick) o).getY2()
+                        && ((Brick) o).getX2() + ((Brick) o).getWidth2() >= ((Brick) o).getX2()
+                        && ((Brick) o).getY2() + ((Brick) o).getHeight2() >= getY());
+            } else {
+                return (getX() + diameter >= o.getX()
+                        && getY() + diameter >= o.getY()
+                        && o.getX() + o.getWidth() >= getX()
+                        && o.getY() + o.getHeight() >= getY());
+            }
         } else {
             return (getX() + diameter >= o.getX() + o.getWidth() / 2 - 10
                     && getY() + diameter >= o.getY() + o.getHeight() / 2 - 10

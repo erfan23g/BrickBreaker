@@ -222,6 +222,10 @@ public class BrickGrid extends JComponent {
         for (GameObject[] row : grid) {
             for (GameObject object : row) {
                 object.setY(object.getY() + speed);
+                if (object instanceof Brick){
+                    ((Brick) object).setX2(object.getX());
+                    ((Brick) object).setY2(object.getY());
+                }
                 if (object instanceof Brick && object.getY() >= 536) {
                     if (PlayingPanel.heart) {
                         for (int j = i - 3; j < GRID_HEIGHT; j++) {
