@@ -61,7 +61,7 @@ public class Ball {
 
 
     public void draw(Graphics g) {
-        if (PlayingPanel.disco){
+        if (PlayingPanel.disco) {
             g.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
         } else {
             g.setColor(color);
@@ -96,15 +96,19 @@ public class Ball {
         switch (d) {
             case UP:
                 this.vy = Math.abs(this.vy);
+//                this.vy = -this.vy;
                 break;
             case DOWN:
                 this.vy = -Math.abs(this.vy);
+//                this.vy = -this.vy;
                 break;
             case LEFT:
                 this.vx = Math.abs(this.vx);
+//                this.vx = -this.vx;
                 break;
             case RIGHT:
                 this.vx = -Math.abs(this.vx);
+//                this.vx = -this.vx;
                 break;
         }
     }
@@ -124,17 +128,10 @@ public class Ball {
 
     public boolean collidesWith(GameObject o) {
         if (o instanceof Brick) {
-            if (PlayingPanel.earthquake){
-                return (getX() + diameter >= ((Brick) o).getX2()
-                        && getY() + diameter >= ((Brick) o).getY2()
-                        && ((Brick) o).getX2() + ((Brick) o).getWidth2() >= ((Brick) o).getX2()
-                        && ((Brick) o).getY2() + ((Brick) o).getHeight2() >= getY());
-            } else {
-                return (getX() + diameter >= o.getX()
-                        && getY() + diameter >= o.getY()
-                        && o.getX() + o.getWidth() >= getX()
-                        && o.getY() + o.getHeight() >= getY());
-            }
+            return (getX() + diameter >= o.getX()
+                    && getY() + diameter >= o.getY()
+                    && o.getX() + o.getWidth() >= getX()
+                    && o.getY() + o.getHeight() >= getY());
         } else {
             return (getX() + diameter >= o.getX() + o.getWidth() / 2 - 10
                     && getY() + diameter >= o.getY() + o.getHeight() / 2 - 10
@@ -143,12 +140,34 @@ public class Ball {
         }
     }
 
+
+    public Direction getDirectionToObject(GameObject o) {
+        // Calculate centers of both objects
+        double centerX = getX() + diameter / 2;
+        double centerY = getY() + diameter / 2;
+        double targetCenterX = o.getX() + o.getWidth() / 2;
+        double targetCenterY = o.getY() + o.getHeight() / 2;
+
+        // Calculate differences in positions
+        double deltaX = targetCenterX - centerX;
+        double deltaY = targetCenterY - centerY;
+
+        // Use absolute values for comparisons to determine primary direction
+        if (Math.abs(deltaX) < Math.abs(deltaY) + 40) {
+            // Horizontal movement is dominant
+            return deltaY > 0 ? Direction.DOWN : Direction.UP;
+        } else {
+            // Vertical movement is dominant or equal; in GUI, positive deltaY means DOWN
+            return deltaX > 0 ? Direction.RIGHT : Direction.LEFT;
+        }
+    }
+
     public Direction hitObjDirection(GameObject o) {
-        double dx = o.getX() + (double) o.getWidth() / 2 - (getX() + (double) diameter / 2);
-        double dy = o.getY() + (double) o.getHeight() / 2 - (getY() + (double) diameter / 2);
+        double dx = o.getX() + o.getWidth() / 2 - (getX() + diameter / 2);
+        double dy = o.getY() + o.getHeight() / 2 - (getY() + diameter / 2);
 
         double theta = Math.acos(dx / (Math.sqrt(dx * dx + dy * dy)));
-        double diagTheta = Math.atan2((double) diameter / 2, (double) diameter / 2);
+        double diagTheta = Math.atan2(diameter / 2, diameter / 2);
 
         if (theta <= diagTheta) {
             return Direction.RIGHT;
@@ -163,6 +182,34 @@ public class Ball {
             return Direction.LEFT;
         }
     }
+
+//    public Direction getDirectionToObject(GameObject o) {
+//        // Calculate centers of both objects
+//        double centerX = getX() + diameter / 2.0;
+//        double centerY = getY() + diameter / 2.0;
+//        double targetCenterX = o.getX() + o.getWidth() / 2.0;
+//        double targetCenterY = o.getY() + o.getHeight() / 2.0;
+//
+//        // Calculate differences in positions
+//        double deltaX = targetCenterX - centerX;
+//        double deltaY = targetCenterY - centerY;
+//
+//        // Adjust for aspect ratio or scale difference
+//        // Assuming width is longer than height, you might need to adjust these factors
+//        double aspectRatio = (double) o.getWidth() / o.getHeight();
+//        double adjustedDeltaX = deltaX * aspectRatio;
+//        double adjustedDeltaY = deltaY; // No adjustment for Y since height is standard
+//
+//        // Compare adjusted differences to determine primary direction
+//        if (Math.abs(adjustedDeltaX) > Math.abs(adjustedDeltaY)) {
+//            // Horizontal movement is dominant
+//            return adjustedDeltaX > 0 ? Direction.RIGHT : Direction.LEFT;
+//        } else {
+//            // Vertical movement is dominant or equal; in GUI, positive deltaY means DOWN
+//            return adjustedDeltaY > 0 ? Direction.DOWN : Direction.UP;
+//        }
+//    }
+
 
     public void setVx(int vx) {
         this.vx = vx;

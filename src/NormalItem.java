@@ -101,7 +101,7 @@ public class NormalItem extends GameObject{
             } else {
                 switch (type){
                     case "Ball":
-                        g.setColor(Color.black);
+                        g.setColor(Color.white);
                         break;
                     case "Speed":
                         g.setColor(Color.red);
@@ -119,7 +119,7 @@ public class NormalItem extends GameObject{
                         g.setColor(Color.green);
                         break;
                     default:
-                        g.setColor(Color.white);
+                        g.setColor(Color.black);
                         break;
                 }
             }

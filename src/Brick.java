@@ -151,19 +151,19 @@ public class Brick extends GameObject {
         switch (mode) {
             case 1:
                 emptyProbability = 6;
-                discoProbability = 2;
+                discoProbability = 0;
                 earthquakeProbability = 0;
-                bombProbability = 2;
+                bombProbability = 0;
                 break;
             case 2:
-                emptyProbability = 4;
-                discoProbability = 2;
+                emptyProbability = 5;
+                discoProbability = 0;
                 earthquakeProbability = 0;
-                bombProbability = 2;
+                bombProbability = 0;
                 break;
             case 3:
-                emptyProbability = 5;
-                discoProbability = 3;
+                emptyProbability = 4;
+                discoProbability = 0;
                 earthquakeProbability = 0;
                 bombProbability = 0;
                 break;

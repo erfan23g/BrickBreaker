@@ -187,8 +187,8 @@ public class PlayingPanel extends JPanel {
                     GameObject obj = grid.getGrid()[i][j];
                     if (ball.collidesWith(obj)) {
                         if (obj instanceof Brick) {
+                            ball.bounce(ball.getDirectionToObject(obj));
                             obj.onCollision(ballPower);
-                            ball.bounce(ball.hitObjDirection(obj));
                             if (((Brick) obj).isReadyToBeDestroyed()) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                                 if (((Brick) obj).getType().equals("Disco")) {
