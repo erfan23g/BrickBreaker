@@ -18,6 +18,7 @@ public class PlayingPanel extends JPanel {
     public static boolean disco;
     public static boolean earthquake;
     public static boolean bomb;
+    public static boolean paused;
     private int eX, eY;
     private boolean vertigo;
     private int ballPower;
@@ -33,9 +34,10 @@ public class PlayingPanel extends JPanel {
     private final int brickSpeed;
     public ArrayList<Ball> balls;
     public static int score;
-    private Timer timer, timer2;
+    public static Timer timer, timer2;
 
     public PlayingPanel(Color ballColor, int mode) {
+        paused = false;
         speed = false;
         power = false;
         heart = false;
@@ -91,25 +93,27 @@ public class PlayingPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                vertigo = false;
-                if (line.getY2() >= balls.getFirst().getY() - 15) {
-                    return;
-                }
-                if (!launched) {
-                    //set overall release here
-                    launched = true;
-                    //sets release of each ball with small delay
-                    setLaunchReadyWithDelay();
+                if (!paused){
+                    vertigo = false;
+                    if (line.getY2() >= balls.getFirst().getY() - 15) {
+                        return;
+                    }
+                    if (!launched) {
+                        //set overall release here
+                        launched = true;
+                        //sets release of each ball with small delay
+                        setLaunchReadyWithDelay();
 
-                    //calculate vx and vy based on mouse release position
-                    double angle = Math.atan2(line.getY2() - balls.getFirst().getY(), line.getX2() - balls.getFirst().getX());
-                    double vx = Math.round(ballSpeed * Math.cos(angle));
-                    double vy = Math.round(ballSpeed * Math.sin(angle));
+                        //calculate vx and vy based on mouse release position
+                        double angle = Math.atan2(line.getY2() - balls.getFirst().getY(), line.getX2() - balls.getFirst().getX());
+                        double vx = Math.round(ballSpeed * Math.cos(angle));
+                        double vy = Math.round(ballSpeed * Math.sin(angle));
 
-                    for (Ball ball : balls) {
-                        ball.setActive(true);
-                        ball.setVx((int) (vx));
-                        ball.setVy((int) (vy));
+                        for (Ball ball : balls) {
+                            ball.setActive(true);
+                            ball.setVx((int) (vx));
+                            ball.setVy((int) (vy));
+                        }
                     }
                 }
             }
@@ -118,7 +122,7 @@ public class PlayingPanel extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (!launched) {
+                if (!launched && !paused) {
                     int mouseX = (int) e.getPoint().getX();
                     int mouseY = (int) e.getPoint().getY();
                     line.setX2(mouseX);

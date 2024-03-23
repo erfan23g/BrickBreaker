@@ -5,8 +5,9 @@ import java.awt.event.ActionListener;
 
 public class GameSettingsFrame extends JFrame {
     private int gameMode = 0;
-    private Color ballColor = Color.black;
+    private Color ballColor;
     public GameSettingsFrame(Point p){
+        this.ballColor = Color.white;
         this.setLocation(p);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +65,7 @@ public class GameSettingsFrame extends JFrame {
         colorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ballColor = JColorChooser.showDialog(null, "Pick a color", Color.black);
+                ballColor = JColorChooser.showDialog(null, "Pick a color", Color.white);
             }
         });
 

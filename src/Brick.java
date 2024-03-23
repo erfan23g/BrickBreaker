@@ -52,7 +52,7 @@ public class Brick extends GameObject {
         }
         health = Math.max(health, 1);
         score = health;
-        color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
+        color = ColorPalate.randomColor();
     }
 
     public int getHealth() {
@@ -151,19 +151,19 @@ public class Brick extends GameObject {
         switch (mode) {
             case 1:
                 emptyProbability = 6;
-                discoProbability = 0;
+                discoProbability = 2;
                 earthquakeProbability = 0;
                 bombProbability = 2;
                 break;
             case 2:
                 emptyProbability = 4;
-                discoProbability = 0;
+                discoProbability = 2;
                 earthquakeProbability = 0;
                 bombProbability = 2;
                 break;
             case 3:
                 emptyProbability = 5;
-                discoProbability = 0;
+                discoProbability = 3;
                 earthquakeProbability = 0;
                 bombProbability = 0;
                 break;

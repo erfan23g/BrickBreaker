@@ -78,6 +78,9 @@ public class NormalItem extends GameObject{
         for (int i = 0; i < heartProbability; i++) {
             choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability] = PlayingPanel.heart2 ? "" : "Heart";
         }
+        if (choices[randomNumber].equals("Heart")){
+            PlayingPanel.heart2 = true;
+        }
         return choices[randomNumber];
     }
 
