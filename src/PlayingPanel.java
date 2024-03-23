@@ -17,6 +17,8 @@ public class PlayingPanel extends JPanel {
     public static boolean heart2;
     public static boolean disco;
     public static boolean earthquake;
+    public static boolean bomb;
+    private int eX, eY;
     private boolean vertigo;
     private int ballPower;
     private int ballsToAdd;
@@ -31,13 +33,15 @@ public class PlayingPanel extends JPanel {
     private final int brickSpeed;
     private ArrayList<Ball> balls;
     private Timer timer, timer2;
-    public PlayingPanel(Color ballColor, int mode){
+
+    public PlayingPanel(Color ballColor, int mode) {
         speed = false;
         power = false;
         heart = false;
         heart2 = false;
         disco = false;
         earthquake = false;
+        bomb = false;
         vertigo = false;
         this.ballsToAdd = 0;
         this.ballSpeed = 10;
@@ -46,13 +50,13 @@ public class PlayingPanel extends JPanel {
         this.ballColor = ballColor;
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         balls = new ArrayList<>();
-        balls.add(new Ball((PANEL_WIDTH - ballDiameter)/2, PANEL_HEIGHT - ballDiameter, ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
+        balls.add(new Ball((PANEL_WIDTH - ballDiameter) / 2, PANEL_HEIGHT - ballDiameter, ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
         this.line = new PreviewLine();
         this.vertigoLine = new PreviewLine();
-        line.setX1(balls.get(0).getX() + ballDiameter/2);
-        line.setY1(balls.get(0).getY() + ballDiameter/2);
-        vertigoLine.setX1(balls.get(0).getX() + ballDiameter/2);
-        vertigoLine.setY1(balls.get(0).getY() + ballDiameter/2);
+        line.setX1(balls.get(0).getX() + ballDiameter / 2);
+        line.setY1(balls.get(0).getY() + ballDiameter / 2);
+        vertigoLine.setX1(balls.get(0).getX() + ballDiameter / 2);
+        vertigoLine.setY1(balls.get(0).getY() + ballDiameter / 2);
 //        brickSpeed = switch (mode){case 1 -> 1; case 2 -> 2; case 3 -> 4;
 //            default -> throw new IllegalStateException("Unexpected value: " + mode);
 //        };
@@ -66,7 +70,7 @@ public class PlayingPanel extends JPanel {
                         launch(ball);
                     }
                 }
-                if (grid.isReadyToEnd()){
+                if (grid.isReadyToEnd()) {
                     closeFrame();
                 }
                 repaint();
@@ -75,7 +79,7 @@ public class PlayingPanel extends JPanel {
         this.timer2 = new Timer(30, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!launched){
+                if (!launched) {
                     grid.moveObjects(brickSpeed);
                     repaint();
                 }
@@ -125,15 +129,16 @@ public class PlayingPanel extends JPanel {
         timer.start();
         timer2.start();
     }
-    public void paint(Graphics g){
+
+    public void paint(Graphics g) {
         grid.paint(g);
-        for (Ball ball : balls){
-            if (!PlayingPanel.disco || Math.random() < 0.5){
+        for (Ball ball : balls) {
+            if (!PlayingPanel.disco || Math.random() < 0.5) {
                 ball.draw(g);
             }
         }
-        if (!launched){
-            if (vertigo){
+        if (!launched) {
+            if (vertigo) {
                 vertigoLine.paintComponent(g, ballColor);
             } else {
                 line.paintComponent(g, ballColor);
@@ -141,13 +146,19 @@ public class PlayingPanel extends JPanel {
             g.setFont(new Font("Calibri", Font.PLAIN, 16));
             g.drawString(balls.size() + "×", balls.getFirst().getX(), balls.getFirst().getY() - ballDiameter / 2);
         }
+        if (bomb){
+            ImageIcon imageIcon = new ImageIcon("src/Explosion2.png");
+            g.drawImage(imageIcon.getImage(), eX, eY, null);
+        }
     }
+
     private void setLaunchReadyWithDelay() {
         java.util.Timer launchTimer = new java.util.Timer();
         launchTimer.schedule(new TimerTask() {
             ArrayList<Ball> temp = new ArrayList<Ball>(balls);
             Iterator<Ball> iter = temp.iterator();
             Ball ball = iter.next();
+
             @Override
             public void run() {
                 ball.setLaunchReady(true);
@@ -159,20 +170,21 @@ public class PlayingPanel extends JPanel {
             }
         }, 0, 100);
     }
-    public void launch(Ball ball){
-        if (ball.isActive()){
+
+    public void launch(Ball ball) {
+        if (ball.isActive()) {
             ball.move();
             ball.bounce(ball.hitWallDirection());
-            for (int i = 0; i < grid.getGrid().length; i++){
-                for (int j = 0; j < grid.getGrid()[i].length; j++){
+            for (int i = 0; i < grid.getGrid().length; i++) {
+                for (int j = 0; j < grid.getGrid()[i].length; j++) {
                     GameObject obj = grid.getGrid()[i][j];
-                    if (ball.collidesWith(obj)){
-                        if (obj instanceof Brick){
+                    if (ball.collidesWith(obj)) {
+                        if (obj instanceof Brick) {
                             obj.onCollision(ballPower);
                             ball.bounce(ball.hitObjDirection(obj));
                             if (((Brick) obj).isReadyToBeDestroyed()) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
-                                if (((Brick) obj).getType().equals("Disco")){
+                                if (((Brick) obj).getType().equals("Disco")) {
                                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                                     disco = true;
                                     scheduler.schedule(() -> {
@@ -186,6 +198,8 @@ public class PlayingPanel extends JPanel {
                                         earthquake = false;
                                     }, 10, TimeUnit.SECONDS);
                                     scheduler.shutdown();
+                                } else if (((Brick) obj).getType().equals("Bomb")) {
+                                    Explosion(obj.getX() + obj.getWidth() / 2, obj.getY() + obj.getHeight() / 2);
                                 }
                             }
                         } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Ball")) {
@@ -202,13 +216,13 @@ public class PlayingPanel extends JPanel {
                             }
                             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                             ballSpeed *= 2;
-                            for (Ball ball1 : balls){
+                            for (Ball ball1 : balls) {
                                 ball1.setVx(ball1.getVx() * 2);
                                 ball1.setVy(ball1.getVy() * 2);
                             }
                             scheduler.schedule(() -> {
                                 ballSpeed /= 2;
-                                for (Ball ball1 : balls){
+                                for (Ball ball1 : balls) {
                                     ball1.setVx(ball1.getVx() / 2);
                                     ball1.setVy(ball1.getVy() / 2);
                                 }
@@ -234,7 +248,7 @@ public class PlayingPanel extends JPanel {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                             }
                             vertigo = true;
-                        }  else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Reverse")) {
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Reverse")) {
                             obj.onCollision(ballPower);
                             if ((((NormalItem) obj).isReadyToBeDestroyed())) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
@@ -257,28 +271,28 @@ public class PlayingPanel extends JPanel {
                 }
             }
 
-            if (ball.hitsFloor()){
+            if (ball.hitsFloor()) {
                 ball.setActive(false);
                 ball.setLaunchReady(false);
                 boolean launchEnded = true;
-                for (Ball ball1 : balls){
-                    if (ball1.isActive()){
+                for (Ball ball1 : balls) {
+                    if (ball1.isActive()) {
                         launchEnded = false;
                     } else {
                         ball.setX(ball1.getX());
                         ball.setY(ball1.getY());
                     }
                 }
-                if (launchEnded){
+                if (launchEnded) {
                     launched = false;
-                    line.setX1(balls.get(0).getX() + ballDiameter/2);
-                    line.setY1(balls.get(0).getY() + ballDiameter/2);
-                    vertigoLine.setX1(balls.get(0).getX() + ballDiameter/2);
-                    vertigoLine.setY1(balls.get(0).getY() + ballDiameter/2);
+                    line.setX1(balls.get(0).getX() + ballDiameter / 2);
+                    line.setY1(balls.get(0).getY() + ballDiameter / 2);
+                    vertigoLine.setX1(balls.get(0).getX() + ballDiameter / 2);
+                    vertigoLine.setY1(balls.get(0).getY() + ballDiameter / 2);
                     balls.add(new Ball(balls.get(0).getX(), balls.get(0).getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
                     grid.nextRound(true);
                     grid.setLevel(grid.getLevel() + 1);
-                    for (int i = 0; i < ballsToAdd; i++){
+                    for (int i = 0; i < ballsToAdd; i++) {
                         balls.add(new Ball(balls.getFirst().getX(), balls.getFirst().getY(), ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
                     }
                     ballsToAdd = 0;
@@ -286,12 +300,44 @@ public class PlayingPanel extends JPanel {
             }
         }
     }
-    public void closeFrame(){
+
+    public void closeFrame() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
             frame.dispose();
             timer.stop();
             timer2.stop();
+        }
+    }
+
+    public void Explosion(int x, int y) {
+        ImageIcon imageIcon = new ImageIcon("src/Explosion2.png");
+        eX = x - imageIcon.getIconWidth()/2;
+        eY = y - imageIcon.getIconHeight()/2;
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        bomb = true;
+        scheduler.schedule(() -> {
+            bomb = false;
+        }, 1, TimeUnit.SECONDS);
+        scheduler.shutdown();
+
+        for (int i = 0; i < grid.getGrid().length; i++) {
+            for (int j = 0; j < grid.getGrid()[i].length; j++){
+                GameObject object = grid.getGrid()[i][j];
+                if (object instanceof Brick){
+                    for (int u = object.getX(); u <= object.getX() + object.getWidth(); u++){
+                        for (int v = object.getY(); v <= object.getY() + object.getHeight(); v++){
+                            double distance = Math.sqrt(Math.pow(u - x, 2) + Math.pow(v - y, 2));
+                            if (distance <= 120.0){
+                                object.onCollision(50);
+                                if (((Brick) object).isReadyToBeDestroyed()){
+                                    grid.getGrid()[i][j] = new EmptyObject(object.getX(), object.getY(), object.getWidth(), object.getHeight());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

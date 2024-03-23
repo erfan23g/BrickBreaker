@@ -144,19 +144,19 @@ public class Brick extends GameObject {
             case 1:
                 emptyProbability = 6;
                 discoProbability = 0;
-                earthquakeProbability = 4;
-                bombProbability = 0;
+                earthquakeProbability = 0;
+                bombProbability = 2;
                 break;
             case 2:
-                emptyProbability = 6;
+                emptyProbability = 4;
                 discoProbability = 0;
-                earthquakeProbability = 1;
-                bombProbability = 0;
+                earthquakeProbability = 0;
+                bombProbability = 2;
                 break;
             case 3:
                 emptyProbability = 5;
                 discoProbability = 0;
-                earthquakeProbability = 1;
+                earthquakeProbability = 0;
                 bombProbability = 0;
                 break;
             default:
@@ -176,7 +176,7 @@ public class Brick extends GameObject {
             choices[i + emptyProbability + discoProbability] = PlayingPanel.earthquake ? "" : "Earthquake";
         }
         for (int i = 0; i < bombProbability; i++) {
-            choices[i + emptyProbability + discoProbability + earthquakeProbability] = "Bomb";
+            choices[i + emptyProbability + discoProbability + earthquakeProbability] = PlayingPanel.bomb ? "" : "Bomb";
         }
         return choices[randomNumber];
     }
