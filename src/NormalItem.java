@@ -93,28 +93,32 @@ public class NormalItem extends GameObject{
     @Override
     public void draw(Graphics g) {
         if (!isReadyToBeDestroyed() && !type.equals("")) {
-            switch (type){
-                case "Ball":
-                    g.setColor(Color.black);
-                    break;
-                case "Speed":
-                    g.setColor(Color.red);
-                    break;
-                case "Power":
-                    g.setColor(Color.blue);
-                    break;
-                case "Vertigo":
-                    g.setColor(Color.yellow);
-                    break;
-                case "Reverse":
-                    g.setColor(Color.pink);
-                    break;
-                case "Heart":
-                    g.setColor(Color.green);
-                    break;
-                default:
-                    g.setColor(Color.white);
-                    break;
+            if (PlayingPanel.disco){
+                g.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+            } else {
+                switch (type){
+                    case "Ball":
+                        g.setColor(Color.black);
+                        break;
+                    case "Speed":
+                        g.setColor(Color.red);
+                        break;
+                    case "Power":
+                        g.setColor(Color.blue);
+                        break;
+                    case "Vertigo":
+                        g.setColor(Color.yellow);
+                        break;
+                    case "Reverse":
+                        g.setColor(Color.pink);
+                        break;
+                    case "Heart":
+                        g.setColor(Color.green);
+                        break;
+                    default:
+                        g.setColor(Color.white);
+                        break;
+                }
             }
             int startX = getX() + (int) Math.round(getWidth()/2.0 - diameter/2.0);
             int startY = getY() +(int) Math.round(getHeight()/2.0 - diameter/2.0);

@@ -61,7 +61,11 @@ public class Ball {
 
 
     public void draw(Graphics g) {
-        g.setColor(color);
+        if (PlayingPanel.disco){
+            g.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+        } else {
+            g.setColor(color);
+        }
         g.fillOval(getX(), getY(), getDiameter(), getDiameter());
     }
 

@@ -11,14 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 
 public class PlayingPanel extends JPanel {
-    public static boolean speed = false;
-    public static boolean power = false;
-    public static boolean heart = false;
-    public static boolean heart2 = false;
-    private boolean vertigo = false;
-    private final int mode;
+    public static boolean speed;
+    public static boolean power;
+    public static boolean heart;
+    public static boolean heart2;
+    public static boolean disco;
+    private boolean vertigo;
     private int ballPower;
-    private int ballsToAdd = 0;
+    private int ballsToAdd;
     BrickGrid grid;
     private boolean launched;
     private final PreviewLine line, vertigoLine;
@@ -26,13 +26,20 @@ public class PlayingPanel extends JPanel {
     private final int PANEL_WIDTH = 500;
     private final int PANEL_HEIGHT = 600;
     private final int ballDiameter = 20;
-    private int ballSpeed = 10;
+    private int ballSpeed;
     private final int brickSpeed;
     private ArrayList<Ball> balls;
     private Timer timer, timer2;
     public PlayingPanel(Color ballColor, int mode){
+        speed = false;
+        power = false;
+        heart = false;
+        heart2 = false;
+        disco = false;
+        vertigo = false;
+        this.ballsToAdd = 0;
+        this.ballSpeed = 10;
         this.ballPower = 1;
-        this.mode = mode;
         this.grid = new BrickGrid(mode);
         this.ballColor = ballColor;
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -119,7 +126,9 @@ public class PlayingPanel extends JPanel {
     public void paint(Graphics g){
         grid.paint(g);
         for (Ball ball : balls){
-            ball.draw(g);
+            if (!PlayingPanel.disco || Math.random() < 0.5){
+                ball.draw(g);
+            }
         }
         if (!launched){
             if (vertigo){
@@ -161,6 +170,14 @@ public class PlayingPanel extends JPanel {
                             ball.bounce(ball.hitObjDirection(obj));
                             if (((Brick) obj).isReadyToBeDestroyed()) {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                                if (((Brick) obj).getType().equals("Disco")){
+                                    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                                    disco = true;
+                                    scheduler.schedule(() -> {
+                                        disco = false;
+                                    }, 10, TimeUnit.SECONDS);
+                                    scheduler.shutdown();
+                                }
                             }
                         } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("Ball")) {
                             obj.onCollision(ballPower);
