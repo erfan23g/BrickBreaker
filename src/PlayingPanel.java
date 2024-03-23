@@ -31,7 +31,8 @@ public class PlayingPanel extends JPanel {
     private final int ballDiameter = 20;
     private int ballSpeed;
     private final int brickSpeed;
-    private ArrayList<Ball> balls;
+    public ArrayList<Ball> balls;
+    public static int score;
     private Timer timer, timer2;
 
     public PlayingPanel(Color ballColor, int mode) {
@@ -43,11 +44,13 @@ public class PlayingPanel extends JPanel {
         earthquake = false;
         bomb = false;
         vertigo = false;
+        score = 0;
         this.ballsToAdd = 0;
         this.ballSpeed = 10;
         this.ballPower = 1;
         this.grid = new BrickGrid(mode);
         this.ballColor = ballColor;
+        this.setBackground(Color.black);
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         balls = new ArrayList<>();
         balls.add(new Ball((PANEL_WIDTH - ballDiameter) / 2, PANEL_HEIGHT - ballDiameter, ballDiameter, PANEL_WIDTH, PANEL_HEIGHT, ballColor));
@@ -325,6 +328,7 @@ public class PlayingPanel extends JPanel {
             for (int j = 0; j < grid.getGrid()[i].length; j++){
                 GameObject object = grid.getGrid()[i][j];
                 if (object instanceof Brick){
+                    outerLoop:
                     for (int u = object.getX(); u <= object.getX() + object.getWidth(); u++){
                         for (int v = object.getY(); v <= object.getY() + object.getHeight(); v++){
                             double distance = Math.sqrt(Math.pow(u - x, 2) + Math.pow(v - y, 2));
@@ -333,6 +337,7 @@ public class PlayingPanel extends JPanel {
                                 if (((Brick) object).isReadyToBeDestroyed()){
                                     grid.getGrid()[i][j] = new EmptyObject(object.getX(), object.getY(), object.getWidth(), object.getHeight());
                                 }
+                                break outerLoop;
                             }
                         }
                     }

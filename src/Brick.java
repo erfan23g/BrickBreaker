@@ -20,6 +20,12 @@ public class Brick extends GameObject {
     private double x2, y2, width2, height2;
     private double dWidth2, dHeight2;
 
+    public int getScore() {
+        return score;
+    }
+
+    private final int score;
+
     public Brick(int x, int y, int width, int height, int mode, int level) {
         super(x, y, width, height);
         this.x2 = x;
@@ -45,6 +51,7 @@ public class Brick extends GameObject {
                 health = level;
         }
         health = Math.max(health, 1);
+        score = health;
         color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
     }
 
@@ -108,6 +115,7 @@ public class Brick extends GameObject {
         }
         if (health <= 0) {
             setReadyToBeDestroyed(true);
+            PlayingPanel.score += this.score;
         }
     }
 
