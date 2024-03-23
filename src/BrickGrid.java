@@ -74,24 +74,41 @@ public class BrickGrid extends JComponent {
     }
 
     private GameObject selectRandomBlock(int x, int y) {
-        //return either an EmptyBlock, NumBlockSprite, or CoinSprite randomly
-        //CoinSprite is generated with a lower probability than the other two
 
-        int emptyProbability = 5;
-        int numBlockProbability = 5;
-        int normalItemProbability = 2;
-        int totalBasket = emptyProbability + numBlockProbability + normalItemProbability;
+        int emptyProbability;
+        int brickProbability;
+        int normalItemProbability;
+        switch (mode){
+            case 1:
+                emptyProbability = 6;
+                brickProbability = 3;
+                normalItemProbability = 1;
+                break;
+            case 2:
+                emptyProbability = 5;
+                brickProbability = 4;
+                normalItemProbability = 1;
+                break;
+            case 3:
+                emptyProbability = 2;
+                brickProbability = 7;
+                normalItemProbability = 1;
+                break;
+            default:
+                throw new RuntimeException();
+        }
+        int totalBasket = emptyProbability + brickProbability + normalItemProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
         GameObject[] choices = new GameObject[totalBasket];
         for (int i = 0; i < emptyProbability; i++) {
             choices[i] = new EmptyObject(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         }
-        for (int i = 0; i < numBlockProbability; i++) {
+        for (int i = 0; i < brickProbability; i++) {
             choices[i + emptyProbability] = new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode, level);
         }
         for (int i = 0; i < normalItemProbability; i++) {
-            choices[i + emptyProbability + numBlockProbability] = new NormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+            choices[i + emptyProbability + brickProbability] = new NormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode);
         }
         return choices[randomNumber];
     }

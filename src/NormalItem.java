@@ -4,20 +4,58 @@ public class NormalItem extends GameObject{
     private final int diameter = 20;
     private final String type;
     private boolean readyToBeDestroyed;
+    private int mode;
 
-    public NormalItem(int x, int y, int width, int height) {
+    public NormalItem(int x, int y, int width, int height, int mode) {
         super(x, y, width, height);
+        this.mode = mode;
         this.type = this.chooseType();
         this.readyToBeDestroyed = false;
     }
 
     public String chooseType() {
-        int ballProbability = 5;
-        int speedProbability = PlayingPanel.speed ? 0 : 1;
-        int powerProbability = PlayingPanel.power ? 0 : 1;
-        int vertigoProbability = 2;
-        int reverseProbability = 4;
-        int heartProbability = PlayingPanel.heart2 ? 0 : 3;
+        int ballProbability;
+        int speedProbability;
+        int powerProbability;
+        int vertigoProbability;
+        int reverseProbability;
+        int heartProbability;
+
+        switch (mode){
+            case 1:
+                ballProbability = 5;
+                speedProbability = 3;
+                powerProbability = 3;
+                vertigoProbability = 2;
+                reverseProbability = 3;
+                heartProbability = 4;
+                break;
+            case 2:
+                ballProbability = 5;
+                speedProbability = 4;
+                powerProbability = 2;
+                vertigoProbability = 4;
+                reverseProbability = 2;
+                heartProbability = 3;
+                break;
+            case 3:
+                ballProbability = 5;
+                speedProbability = 4;
+                powerProbability = 2;
+                vertigoProbability = 5;
+                reverseProbability = 2;
+                heartProbability = 2;
+                break;
+            default:
+                ballProbability = 1;
+                speedProbability = 1;
+                powerProbability = 1;
+                vertigoProbability = 1;
+                reverseProbability = 1;
+                heartProbability = 1;
+                break;
+        }
+
         int totalBasket = ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability + heartProbability;
         int randomNumber = (int) (Math.random() * totalBasket);
 
@@ -26,10 +64,10 @@ public class NormalItem extends GameObject{
             choices[i] = "Ball";
         }
         for (int i = 0; i < speedProbability; i++) {
-            choices[i + ballProbability] = "Speed";
+            choices[i + ballProbability] = PlayingPanel.speed ? "" : "Speed";
         }
         for (int i = 0; i < powerProbability; i++) {
-            choices[i + ballProbability + speedProbability] = "Power";
+            choices[i + ballProbability + speedProbability] = PlayingPanel.power ? "" : "Power";
         }
         for (int i = 0; i < vertigoProbability; i++) {
             choices[i + ballProbability + speedProbability + powerProbability] = "Vertigo";
@@ -38,7 +76,7 @@ public class NormalItem extends GameObject{
             choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability] = "Reverse";
         }
         for (int i = 0; i < heartProbability; i++) {
-            choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability] = "Heart";
+            choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability] = PlayingPanel.heart2 ? "" : "Heart";
         }
         return choices[randomNumber];
     }
@@ -54,7 +92,7 @@ public class NormalItem extends GameObject{
 
     @Override
     public void draw(Graphics g) {
-        if (!isReadyToBeDestroyed()) {
+        if (!isReadyToBeDestroyed() && !type.equals("")) {
             switch (type){
                 case "Ball":
                     g.setColor(Color.black);
@@ -73,6 +111,9 @@ public class NormalItem extends GameObject{
                     break;
                 case "Heart":
                     g.setColor(Color.green);
+                    break;
+                default:
+                    g.setColor(Color.white);
                     break;
             }
             int startX = getX() + (int) Math.round(getWidth()/2.0 - diameter/2.0);

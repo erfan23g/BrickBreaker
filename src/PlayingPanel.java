@@ -221,6 +221,11 @@ public class PlayingPanel extends JPanel {
                             }
                             heart = true;
                             heart2 = true;
+                        } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("")) {
+                            obj.onCollision(ballPower);
+                            if ((((NormalItem) obj).isReadyToBeDestroyed())) {
+                                grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+                            }
                         }
                     }
                 }
