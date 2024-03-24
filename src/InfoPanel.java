@@ -27,6 +27,7 @@ public class InfoPanel extends JPanel {
                     PlayingPanel.timer.stop();
                     PlayingPanel.timer2.stop();
                     PlayingPanel.timer3.stop();
+                    PlayingPanel.timer4.stop();
                     timer.stop();
                     paused = true;
                     PlayingPanel.paused = true;
@@ -35,6 +36,7 @@ public class InfoPanel extends JPanel {
                     PlayingPanel.timer.restart();
                     PlayingPanel.timer2.restart();
                     PlayingPanel.timer3.restart();
+                    PlayingPanel.timer4.restart();
                     timer.restart();
                     paused = false;
                     PlayingPanel.paused = false;

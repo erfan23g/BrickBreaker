@@ -8,6 +8,8 @@ public class GameFrame extends JFrame {
     private final Color ballColor;
     private int time;
     private final int mode;
+
+
     public GameFrame(String playerName, Color ballColor, int mode, Point p){
         this.playerName = playerName;
         this.ballColor = ballColor;
@@ -18,7 +20,7 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(new Dimension(500, 700));
         this.setLayout(new BorderLayout());
-        PlayingPanel playingPanel = new PlayingPanel(ballColor, mode);
+        PlayingPanel playingPanel = new PlayingPanel(ballColor, mode, playerName);
         this.add(playingPanel, BorderLayout.SOUTH);
         // TODO change info panel
         InfoPanel infoPanel = new InfoPanel(playerName);

@@ -35,8 +35,10 @@ public class PlayingPanel extends JPanel {
     public ArrayList<Ball> balls;
     public static int score;
     public static Timer timer, timer2, timer3, timer4;
+    private final int mode;
+    private final String playerName;
 
-    public PlayingPanel(Color ballColor, int mode) {
+    public PlayingPanel(Color ballColor, int mode, String playerName) {
         paused = false;
         speed = false;
         power = false;
@@ -47,6 +49,8 @@ public class PlayingPanel extends JPanel {
         bomb = false;
         vertigo = false;
         score = 0;
+        this.mode = mode;
+        this.playerName = playerName;
         this.ballsToAdd = 0;
         this.ballSpeed = 10;
         this.ballPower = 1;
@@ -372,6 +376,9 @@ public class PlayingPanel extends JPanel {
             frame.dispose();
             timer.stop();
             timer2.stop();
+            timer3.stop();
+            timer4.stop();
+            new RematchFrame(playerName, ballColor, mode, getLocation());
         }
     }
 

@@ -37,7 +37,7 @@ public class BrickGrid extends JComponent {
     public void paintComponent(Graphics g) {
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
-                if (!PlayingPanel.disco || Math.random() < 0.5){
+                if (!PlayingPanel.disco || Math.random() < 0.5) {
                     grid[r][c].draw(g);
                 }
             }
@@ -79,7 +79,7 @@ public class BrickGrid extends JComponent {
         int emptyProbability;
         int brickProbability;
         int normalItemProbability;
-        switch (mode){
+        switch (mode) {
             case 1:
                 emptyProbability = 6;
                 brickProbability = 3;
@@ -232,7 +232,9 @@ public class BrickGrid extends JComponent {
                         }
                         PlayingPanel.heart = false;
                     } else {
-                        JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.PLAIN_MESSAGE);
+                        if (!readyToEnd) {
+                            JOptionPane.showMessageDialog(null, "You lost", "Game over", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/GameOver.png"));
+                        }
                         setReadyToEnd(true);
                     }
                 }

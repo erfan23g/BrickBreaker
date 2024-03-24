@@ -145,7 +145,7 @@ public class Brick extends GameObject {
             case 3:
                 emptyProbability = 4;
                 discoProbability = 0;
-                earthquakeProbability = 3;
+                earthquakeProbability = 0;
                 bombProbability = 0;
                 break;
             default:
