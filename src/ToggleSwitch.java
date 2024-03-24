@@ -45,7 +45,7 @@ public class ToggleSwitch extends JPanel {
                         break;
                     case 2:
                         Main.music = activated;
-
+                        OptionsFrame.change = true;
                         break;
                     case 3:
                         Main.saving = activated;

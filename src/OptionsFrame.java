@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class OptionsFrame extends JFrame {
+    public static boolean change;
     public OptionsFrame(Point p){
         super("BrickBreaker+");
         this.setIconImage(new ImageIcon("").getImage());
@@ -21,6 +22,7 @@ public class OptionsFrame extends JFrame {
         this.setLayout(null);
         this.getContentPane().setBackground(Color.black);
 
+        change = false;
 
 
         JLabel label = new JLabel("Turn aiming on/off:");
@@ -71,17 +73,19 @@ public class OptionsFrame extends JFrame {
                     FileWriter fileWriter = new FileWriter(file, false);
                     fileWriter.append(Main.aiming + "," + Main.music + "," + Main.saving + "\n");
                     fileWriter.close();
-                    if (!Main.music) {
-                        try {
-                            Main.pause();
-                        } catch (JavaLayerException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else {
-                        try {
-                            Main.play();
-                        } catch (JavaLayerException ex) {
-                            throw new RuntimeException(ex);
+                    if (change) {
+                        if (!Main.music) {
+                            try {
+                                Main.pause();
+                            } catch (JavaLayerException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        } else {
+                            try {
+                                Main.play();
+                            } catch (JavaLayerException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     }
                 } catch (IOException ex) {
