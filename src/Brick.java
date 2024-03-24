@@ -17,23 +17,33 @@ public class Brick extends GameObject {
     private final Color color;
     private final String type;
     private final int mode;
-    private double x2, y2, width2, height2;
-    private double dWidth2, dHeight2;
+
 
     public int getScore() {
         return score;
     }
 
     private final int score;
+    private int dx, dy;
+
+    public int getDx() {
+        return dx;
+    }
+
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
+
+    public int getDy() {
+        return dy;
+    }
+
+    public void setDy(int dy) {
+        this.dy = dy;
+    }
 
     public Brick(int x, int y, int width, int height, int mode, int level) {
         super(x, y, width, height);
-        this.x2 = x;
-        this.y2 = y;
-        this.width2 = width;
-        this.height2 = height;
-        this.dWidth2 = Math.random() < 0.5 ? 0.05 : -0.05;
-        this.dHeight2 = Math.random() < 0.5 ? 0.05 : -0.05;
         this.mode = mode;
         this.type = chooseType();
         int rnd = (int) (Math.random() * 9);
@@ -73,13 +83,7 @@ public class Brick extends GameObject {
         } else {
             g.setColor(color);
         }
-        if (PlayingPanel.earthquake && type.isEmpty()){
-            width2 += dWidth2;
-            height2 += dHeight2;
-            g.fillRect((int) x2, (int) y2, (int) width2, (int) height2);
-        } else {
-            g.fillRect(getX(), getY(), getWidth(), getHeight());
-        }
+        g.fillRect(getX(), getY(), getWidth(), getHeight());
 
         if (type.equals("Disco")) {
             ImageIcon imageIcon = new ImageIcon("src/Disco.png");
@@ -119,29 +123,6 @@ public class Brick extends GameObject {
         }
     }
 
-    public double getX2() {
-        return x2;
-    }
-
-    public void setX2(double x2) {
-        this.x2 = x2;
-    }
-
-    public double getWidth2() {
-        return width2;
-    }
-
-    public void setWidth2(double width2) {
-        this.width2 = width2;
-    }
-
-    public double getHeight2() {
-        return height2;
-    }
-
-    public void setHeight2(double height2) {
-        this.height2 = height2;
-    }
 
     public String chooseType() {
         int emptyProbability;
@@ -164,7 +145,7 @@ public class Brick extends GameObject {
             case 3:
                 emptyProbability = 4;
                 discoProbability = 0;
-                earthquakeProbability = 0;
+                earthquakeProbability = 3;
                 bombProbability = 0;
                 break;
             default:
@@ -191,13 +172,5 @@ public class Brick extends GameObject {
 
     public String getType() {
         return type;
-    }
-
-    public double getY2() {
-        return y2;
-    }
-
-    public void setY2(double y2) {
-        this.y2 = y2;
     }
 }

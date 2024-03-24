@@ -34,7 +34,7 @@ public class PlayingPanel extends JPanel {
     private final int brickSpeed;
     public ArrayList<Ball> balls;
     public static int score;
-    public static Timer timer, timer2;
+    public static Timer timer, timer2, timer3, timer4;
 
     public PlayingPanel(Color ballColor, int mode) {
         paused = false;
@@ -78,6 +78,7 @@ public class PlayingPanel extends JPanel {
                 if (grid.isReadyToEnd()) {
                     closeFrame();
                 }
+
                 repaint();
             }
         });
@@ -87,6 +88,37 @@ public class PlayingPanel extends JPanel {
                 if (!launched) {
                     grid.moveObjects(brickSpeed);
                     repaint();
+                }
+            }
+        });
+        this.timer3 = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (earthquake){
+                    for (GameObject[] row : grid.getGrid()) {
+                        for (GameObject object : row){
+                            if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
+                                object.setWidth(object.getWidth() + ((Brick) object).getDx());
+                                object.setHeight(object.getHeight() + ((Brick) object).getDy());
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        this.timer4 = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (earthquake){
+                    for (GameObject[] row : grid.getGrid()) {
+                        for (GameObject object : row){
+                            if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
+                                int dx = ((Brick) object).getDx(), dy = ((Brick) object).getDy();
+                                ((Brick) object).setDx(-dx);
+                                ((Brick) object).setDy(-dy);
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -135,6 +167,7 @@ public class PlayingPanel extends JPanel {
         });
         timer.start();
         timer2.start();
+        timer3.start();
     }
 
     public void paint(Graphics g) {
@@ -201,8 +234,33 @@ public class PlayingPanel extends JPanel {
                                 } else if (((Brick) obj).getType().equals("Earthquake")) {
                                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                                     earthquake = true;
+                                    for (GameObject[] row : grid.getGrid()) {
+                                        for (GameObject object : row){
+                                            if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
+                                                int r1 = (int) (Math.random() * 5), r2 = (int) (Math.random() * 5);
+                                                if (Math.random() < 0.5){
+                                                    ((Brick) object).setDx(r1);
+                                                } else {
+                                                    ((Brick) object).setDx(-r1);
+                                                }
+                                                if (Math.random() < 0.5){
+                                                    ((Brick) object).setDy(r2);
+                                                } else {
+                                                    ((Brick) object).setDy(-r2);
+                                                }
+                                            }
+                                        }
+                                    }
                                     scheduler.schedule(() -> {
                                         earthquake = false;
+                                        for (GameObject[] row : grid.getGrid()) {
+                                            for (GameObject object : row){
+                                                if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
+                                                    object.setWidth(BrickGrid.BRICK_WIDTH);
+                                                    object.setHeight(BrickGrid.BRICK_HEIGHT);
+                                                }
+                                            }
+                                        }
                                     }, 10, TimeUnit.SECONDS);
                                     scheduler.shutdown();
                                 } else if (((Brick) obj).getType().equals("Bomb")) {
