@@ -62,6 +62,17 @@ public class Brick extends GameObject {
         }
         health = Math.max(health, 1);
         score = health;
+        int r1 = (int) (Math.random() * 6), r2 = (int) (Math.random() * 6);
+        if (Math.random() < 0.5){
+            setDx(r1);
+        } else {
+            setDx(-r1);
+        }
+        if (Math.random() < 0.5){
+            setDy(r2);
+        } else {
+            setDy(-r2);
+        }
         color = ColorPalate.randomColor();
     }
 
@@ -131,22 +142,22 @@ public class Brick extends GameObject {
         int bombProbability;
         switch (mode) {
             case 1:
-                emptyProbability = 6;
-                discoProbability = 0;
-                earthquakeProbability = 0;
-                bombProbability = 0;
+                emptyProbability = 16;
+                discoProbability = 1;
+                earthquakeProbability = 1;
+                bombProbability = 2;
                 break;
             case 2:
-                emptyProbability = 5;
-                discoProbability = 0;
-                earthquakeProbability = 0;
-                bombProbability = 0;
+                emptyProbability = 17;
+                discoProbability = 1;
+                earthquakeProbability = 1;
+                bombProbability = 1;
                 break;
             case 3:
-                emptyProbability = 4;
-                discoProbability = 0;
-                earthquakeProbability = 0;
-                bombProbability = 0;
+                emptyProbability = 16;
+                discoProbability = 1;
+                earthquakeProbability = 2;
+                bombProbability = 1;
                 break;
             default:
                 throw new RuntimeException();

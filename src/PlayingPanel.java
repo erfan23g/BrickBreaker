@@ -110,6 +110,8 @@ public class PlayingPanel extends JPanel {
                             if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
                                 object.setWidth(object.getWidth() + ((Brick) object).getDx());
                                 object.setHeight(object.getHeight() + ((Brick) object).getDy());
+                                // This is a safe way to remove elements while iterating
+                                balls.removeIf(ball -> ball.isLost((Brick) object));
                             }
                         }
                     }
@@ -178,6 +180,7 @@ public class PlayingPanel extends JPanel {
         timer.start();
         timer2.start();
         timer3.start();
+        timer4.start();
     }
 
     public void paint(Graphics g) {
@@ -246,23 +249,6 @@ public class PlayingPanel extends JPanel {
                                 } else if (((Brick) obj).getType().equals("Earthquake")) {
                                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                                     earthquake = true;
-                                    for (GameObject[] row : grid.getGrid()) {
-                                        for (GameObject object : row){
-                                            if (object instanceof Brick && ((Brick) object).getType().isEmpty()){
-                                                int r1 = (int) (Math.random() * 5), r2 = (int) (Math.random() * 5);
-                                                if (Math.random() < 0.5){
-                                                    ((Brick) object).setDx(r1);
-                                                } else {
-                                                    ((Brick) object).setDx(-r1);
-                                                }
-                                                if (Math.random() < 0.5){
-                                                    ((Brick) object).setDy(r2);
-                                                } else {
-                                                    ((Brick) object).setDy(-r2);
-                                                }
-                                            }
-                                        }
-                                    }
                                     scheduler.schedule(() -> {
                                         earthquake = false;
                                         for (GameObject[] row : grid.getGrid()) {

@@ -183,7 +183,7 @@ public class Ball {
         }
     }
 
-//    public Direction getDirectionToObject(GameObject o) {
+    //    public Direction getDirectionToObject(GameObject o) {
 //        // Calculate centers of both objects
 //        double centerX = getX() + diameter / 2.0;
 //        double centerY = getY() + diameter / 2.0;
@@ -209,6 +209,25 @@ public class Ball {
 //            return adjustedDeltaY > 0 ? Direction.DOWN : Direction.UP;
 //        }
 //    }
+    public boolean isLost(BrickGrid grid) {
+        for (GameObject[] row : grid.getGrid()) {
+            for (GameObject object : row) {
+                if (getX() >= object.getX()
+                        && getX() + getDiameter() <= object.getX() + object.getWidth()
+                        && getY() >= object.getY()
+                        && getY() + getDiameter() <= object.getY() + object.getHeight()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public boolean isLost(Brick object) {
+        return getX() >= object.getX()
+                && getX() + getDiameter() <= object.getX() + object.getWidth()
+                && getY() >= object.getY()
+                && getY() + getDiameter() <= object.getY() + object.getHeight();
+    }
 
 
     public void setVx(int vx) {

@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class NormalItem extends GameObject{
@@ -96,36 +97,41 @@ public class NormalItem extends GameObject{
     @Override
     public void draw(Graphics g) {
         if (!isReadyToBeDestroyed() && !type.equals("")) {
+            int startX = getX() + (int) Math.round(getWidth()/2.0 - diameter/2.0);
+            int startY = getY() +(int) Math.round(getHeight()/2.0 - diameter/2.0);
             if (PlayingPanel.disco){
                 g.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+                g.fillOval(startX, startY, diameter, diameter);
             } else {
                 switch (type){
                     case "Ball":
-                        g.setColor(Color.white);
+                        g.drawImage(new ImageIcon("src/Ball.png").getImage(), startX, startY, null);
                         break;
                     case "Speed":
-                        g.setColor(Color.red);
+//                        g.setColor(Color.red);
+                        g.drawImage(new ImageIcon("src/Speed.png").getImage(), startX, startY, null);
                         break;
                     case "Power":
-                        g.setColor(Color.blue);
+//                        g.setColor(Color.blue);
+                        g.drawImage(new ImageIcon("src/Power.png").getImage(), startX, startY, null);
                         break;
                     case "Vertigo":
-                        g.setColor(Color.yellow);
+//                        g.setColor(Color.yellow);
+                        g.drawImage(new ImageIcon("src/Vertigo.png").getImage(), startX, startY, null);
                         break;
                     case "Reverse":
-                        g.setColor(Color.pink);
+//                        g.setColor(Color.pink);
+                        g.drawImage(new ImageIcon("src/Reverse.png").getImage(), startX, startY, null);
                         break;
                     case "Heart":
-                        g.setColor(Color.green);
+//                        g.setColor(Color.green);
+                        g.drawImage(new ImageIcon("src/Heart.png").getImage(), startX, startY, null);
                         break;
                     default:
                         g.setColor(Color.black);
                         break;
                 }
             }
-            int startX = getX() + (int) Math.round(getWidth()/2.0 - diameter/2.0);
-            int startY = getY() +(int) Math.round(getHeight()/2.0 - diameter/2.0);
-            g.fillOval(startX, startY, diameter, diameter);
         }
     }
 
