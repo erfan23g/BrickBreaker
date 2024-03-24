@@ -22,19 +22,19 @@ public class StartingFrame extends JFrame {
         // Create the buttons
         JButton newGameButton = new JButton("New Game");
         JButton historyButton = new JButton("History");
-        JButton settingsButton = new JButton("Options");
+        JButton optionsButton = new JButton("Options");
 
         // Change button colors
         newGameButton.setBackground(Color.ORANGE);
         historyButton.setBackground(Color.ORANGE);
-        settingsButton.setBackground(Color.ORANGE);
+        optionsButton.setBackground(Color.ORANGE);
 
 
 
         // Set a maximum size for the buttons to enforce a consistent size
         newGameButton.setMaximumSize(new Dimension(250, 250));
         historyButton.setMaximumSize(new Dimension(250, 250));
-        settingsButton.setMaximumSize(new Dimension(250, 250));
+        optionsButton.setMaximumSize(new Dimension(250, 250));
 
         newGameButton.addActionListener(new ActionListener() {
             @Override
@@ -43,10 +43,17 @@ public class StartingFrame extends JFrame {
                 new GameSettingsFrame(getLocation());
             }
         });
+        optionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new OptionsFrame(getLocation());
+            }
+        });
         // Align the buttons in the center horizontally
         newGameButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         historyButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
-        settingsButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
+        optionsButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
 
 
         // Add the buttons to the frame with space between them
@@ -54,7 +61,7 @@ public class StartingFrame extends JFrame {
         this.add(Box.createVerticalStrut(10)); // Space between buttons
         this.add(historyButton);
         this.add(Box.createVerticalStrut(10)); // Space between buttons
-        this.add(settingsButton);
+        this.add(optionsButton);
 
         // Add some glue at the bottom as well to center the buttons vertically
         this.add(Box.createVerticalGlue());

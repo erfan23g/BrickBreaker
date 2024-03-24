@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BrickBreaker.iml" filepath="$PROJECT_DIR$/BrickBreaker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../javafx-23-javadoc/javafx-23-javadoc.iml" filepath="$PROJECT_DIR$/../javafx-23-javadoc/javafx-23-javadoc.iml" />
     </modules>
   </component>
 </project>

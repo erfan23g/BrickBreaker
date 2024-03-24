@@ -70,7 +70,7 @@ public class NormalItem extends GameObject{
             choices[i + ballProbability + speedProbability] = PlayingPanel.power ? "" : "Power";
         }
         for (int i = 0; i < vertigoProbability; i++) {
-            choices[i + ballProbability + speedProbability + powerProbability] = "Vertigo";
+            choices[i + ballProbability + speedProbability + powerProbability] = Main.aiming ? "Vertigo" : "";
         }
         for (int i = 0; i < reverseProbability; i++) {
             choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability] = "Reverse";

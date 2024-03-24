@@ -182,10 +182,12 @@ public class PlayingPanel extends JPanel {
             }
         }
         if (!launched) {
-            if (vertigo) {
-                vertigoLine.paintComponent(g, ballColor);
-            } else {
-                line.paintComponent(g, ballColor);
+            if (Main.aiming){
+                if (vertigo) {
+                    vertigoLine.paintComponent(g, ballColor);
+                } else {
+                    line.paintComponent(g, ballColor);
+                }
             }
             g.setFont(new Font("Calibri", Font.PLAIN, 16));
             g.drawString(balls.size() + "×", balls.getFirst().getX(), balls.getFirst().getY() - ballDiameter / 2);
