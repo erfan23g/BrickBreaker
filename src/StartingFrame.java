@@ -50,6 +50,13 @@ public class StartingFrame extends JFrame {
                 new OptionsFrame(getLocation());
             }
         });
+        historyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new HistoryFrame(getLocation());
+            }
+        });
         // Align the buttons in the center horizontally
         newGameButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         historyButton.setAlignmentX(JFrame.CENTER_ALIGNMENT);

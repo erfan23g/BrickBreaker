@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 public class OptionsFrame extends JFrame {
     public OptionsFrame(Point p){
@@ -32,7 +36,7 @@ public class OptionsFrame extends JFrame {
 
 
 
-        JLabel label3 = new JLabel("Turn music on/off:");
+        JLabel label3 = new JLabel("Turn saving on/off:");
         label3.setFont(new Font("Calibri", Font.PLAIN, 22));
         label3.setBounds(0, 490, 500, 100);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -41,7 +45,7 @@ public class OptionsFrame extends JFrame {
         this.add(savingSwitch);
 
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton("Save");
         backButton.setFont(new Font("Calibri", Font.PLAIN, 15));
         backButton.setBounds(150, 120, 200, 100);
         backButton.setHorizontalAlignment(JButton.CENTER);
@@ -49,6 +53,14 @@ public class OptionsFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                File file = new File("src/settings.txt");
+                try {
+                    FileWriter fileWriter = new FileWriter(file, false);
+                    fileWriter.append(Main.aiming + "," + Main.music + "," + Main.saving + "\n");
+                    fileWriter.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 new StartingFrame(getLocation());
             }
         });

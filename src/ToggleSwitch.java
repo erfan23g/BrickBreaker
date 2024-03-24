@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ToggleSwitch extends JPanel {
-    private boolean activated = false;
+    private boolean activated;
     private Color switchColor = new Color(200, 200, 200), buttonColor = new Color(255, 255, 255), borderColor = new Color(50, 50, 50);
     private Color activeSwitch = new Color(0, 125, 255);
     private BufferedImage puffer;
@@ -19,6 +19,17 @@ public class ToggleSwitch extends JPanel {
     private Graphics2D g;
     public ToggleSwitch(int x, int y, int type) {
         super();
+        switch (type){
+            case 1:
+                activated = Main.aiming;
+                break;
+            case 2:
+                activated = Main.music;
+                break;
+            case 3:
+                activated = Main.saving;
+                break;
+        }
         setVisible(true);
         addMouseListener(new MouseAdapter() {
             @Override

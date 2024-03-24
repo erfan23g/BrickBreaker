@@ -1,13 +1,17 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.TimerTask;
-import java.util.TreeSet;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.time.format.DateTimeFormatter;
+
 
 
 public class PlayingPanel extends JPanel {
@@ -37,6 +41,7 @@ public class PlayingPanel extends JPanel {
     public static Timer timer, timer2, timer3, timer4;
     private final int mode;
     private final String playerName;
+    private final LocalDateTime date;
 
     public PlayingPanel(Color ballColor, int mode, String playerName) {
         paused = false;
@@ -51,6 +56,7 @@ public class PlayingPanel extends JPanel {
         score = 0;
         this.mode = mode;
         this.playerName = playerName;
+        this.date = LocalDateTime.now();
         this.ballsToAdd = 0;
         this.ballSpeed = 10;
         this.ballPower = 1;
@@ -380,6 +386,19 @@ public class PlayingPanel extends JPanel {
             timer2.stop();
             timer3.stop();
             timer4.stop();
+            if (Main.saving){
+                File file = new File("src/games.txt");
+                try {
+                    FileWriter fileWriter = new FileWriter(file, true);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDateTime = date.format(formatter);
+                    fileWriter.append(playerName + "," + InfoPanel.score + "," + formattedDateTime + "\n");
+                    fileWriter.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
             new RematchFrame(playerName, ballColor, mode, getLocation());
         }
     }

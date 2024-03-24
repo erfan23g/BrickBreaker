@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 public class InfoPanel extends JPanel {
     private final String playerName;
     private Timer timer;
-    private int time, score;
+    private int time;
+    public static int score;
     private boolean paused;
     JButton pauseButton;
 
@@ -17,7 +18,7 @@ public class InfoPanel extends JPanel {
         this.setBackground(Color.darkGray);
         this.setLayout(new GridBagLayout());
         this.time = 0;
-        this.score = 0;
+        score = 0;
         this.paused = false;
         this.pauseButton = new JButton();
         pauseButton.addActionListener(new ActionListener() {
