@@ -1,3 +1,5 @@
+import javazoom.jl.decoder.JavaLayerException;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -24,6 +26,7 @@ public class ToggleSwitch extends JPanel {
                 activated = Main.aiming;
                 break;
             case 2:
+
                 activated = Main.music;
                 break;
             case 3:
@@ -42,6 +45,7 @@ public class ToggleSwitch extends JPanel {
                         break;
                     case 2:
                         Main.music = activated;
+
                         break;
                     case 3:
                         Main.saving = activated;

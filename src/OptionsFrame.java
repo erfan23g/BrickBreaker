@@ -1,3 +1,5 @@
+import javazoom.jl.decoder.JavaLayerException;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -69,6 +71,19 @@ public class OptionsFrame extends JFrame {
                     FileWriter fileWriter = new FileWriter(file, false);
                     fileWriter.append(Main.aiming + "," + Main.music + "," + Main.saving + "\n");
                     fileWriter.close();
+                    if (!Main.music) {
+                        try {
+                            Main.pause();
+                        } catch (JavaLayerException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        try {
+                            Main.play();
+                        } catch (JavaLayerException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

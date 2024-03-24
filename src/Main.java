@@ -1,15 +1,27 @@
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+
+
 import javax.print.attribute.standard.Media;
 import javax.sound.sampled.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Main {
-    static Clip clip;
     public static boolean aiming, music, saving;
+    public static AdvancedPlayer player;
+    private static FileInputStream fileInputStream;
+    private static int pausePosition = 0;
+
     public static void main(String[] args) {
         File file = new File("src/settings.txt");
         try {
@@ -24,23 +36,51 @@ public class Main {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
         new StartingFrame();
-//        new OptionsFrame(new Point(300, 200));
-//        new HistoryFrame(new Point(200, 300));
+        if (music) {
+            try {
+                play();
+            } catch (JavaLayerException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
+    public static void play() throws JavaLayerException {
+        try {
+            // Reset and prepare the stream
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
+            fileInputStream = new FileInputStream("src/song2.mp3");
+            player = new AdvancedPlayer(fileInputStream);
 
-//        while (music){
-//            try {
-//                File musicFile = new File("src/output.wav"); // Change this to your music file path
-//                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(musicFile);
-//                AudioFormat format = audioInputStream.getFormat();
-//                DataLine.Info info = new DataLine.Info(Clip.class, format);
-//                clip = (Clip) AudioSystem.getLine(info);
-//                clip.open(audioInputStream);
-//                clip.start();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
+            // Skip to the pause position if resuming
+            fileInputStream.getChannel().position(pausePosition);
+
+            // Play the MP3 file
+            new Thread(() -> {
+                try {
+                    player.play();
+                    player.play(pausePosition, Integer.MAX_VALUE);
+                } catch (JavaLayerException e) {
+//                    e.printStackTrace();
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void pause() throws JavaLayerException {
+        if (player != null) {
+            try {
+                // Remember the current position and close the player
+                pausePosition += fileInputStream.getChannel().position();
+                player.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
