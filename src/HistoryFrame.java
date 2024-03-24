@@ -12,6 +12,8 @@ public class HistoryFrame extends JFrame {
     private int count = 1;
 
     public HistoryFrame(Point p) {
+        super("BrickBreaker+");
+        this.setIconImage(new ImageIcon("").getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setSize(new Dimension(500, 700));
@@ -37,7 +39,7 @@ public class HistoryFrame extends JFrame {
         mainPanel = new JPanel();
         // Adjust spacing between panels
         mainPanel.setLayout(new GridLayout(0, 1, 0, 5)); // GridLayout with 10px vertical gap
-        this.setBackground(Color.BLACK);
+        this.getContentPane().setBackground(Color.BLACK);
 
         File file = new File("src/games.txt");
         try {
