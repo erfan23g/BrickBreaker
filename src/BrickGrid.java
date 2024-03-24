@@ -111,6 +111,9 @@ public class BrickGrid extends JComponent {
         for (int i = 0; i < normalItemProbability; i++) {
             choices[i + emptyProbability + brickProbability] = new NormalItem(x, y, BRICK_WIDTH, BRICK_HEIGHT, mode);
         }
+        if (choices[randomNumber] instanceof NormalItem && ((NormalItem) choices[randomNumber]).getType().equals("Heart")) {
+            PlayingPanel.heart2 = true;
+        }
         return choices[randomNumber];
     }
 
@@ -192,10 +195,9 @@ public class BrickGrid extends JComponent {
             if (c == grid[0].length - 1) {
                 boolean noBrick = true;
                 boolean allBrick = true;
-                for (GameObject obj : grid[0]) {
-                    if (obj instanceof Brick) {
+                for (int i = 0; i < grid[0].length - 1; i++) {
+                    if (grid[0][i] instanceof Brick) {
                         noBrick = false;
-                        break;
                     } else {
                         allBrick = false;
                     }

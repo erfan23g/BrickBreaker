@@ -79,9 +79,6 @@ public class NormalItem extends GameObject{
         for (int i = 0; i < heartProbability; i++) {
             choices[i + ballProbability + speedProbability + powerProbability + vertigoProbability + reverseProbability] = PlayingPanel.heart2 ? "" : "Heart";
         }
-        if (choices[randomNumber].equals("Heart")){
-            PlayingPanel.heart2 = true;
-        }
         return choices[randomNumber];
     }
 
@@ -108,23 +105,18 @@ public class NormalItem extends GameObject{
                         g.drawImage(new ImageIcon("src/Ball.png").getImage(), startX, startY, null);
                         break;
                     case "Speed":
-//                        g.setColor(Color.red);
                         g.drawImage(new ImageIcon("src/Speed.png").getImage(), startX, startY, null);
                         break;
                     case "Power":
-//                        g.setColor(Color.blue);
                         g.drawImage(new ImageIcon("src/Power.png").getImage(), startX, startY, null);
                         break;
                     case "Vertigo":
-//                        g.setColor(Color.yellow);
                         g.drawImage(new ImageIcon("src/Vertigo.png").getImage(), startX, startY, null);
                         break;
                     case "Reverse":
-//                        g.setColor(Color.pink);
                         g.drawImage(new ImageIcon("src/Reverse.png").getImage(), startX, startY, null);
                         break;
                     case "Heart":
-//                        g.setColor(Color.green);
                         g.drawImage(new ImageIcon("src/Heart.png").getImage(), startX, startY, null);
                         break;
                     default:

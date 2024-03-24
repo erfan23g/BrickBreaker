@@ -27,7 +27,7 @@ public class PlayingPanel extends JPanel {
     private boolean vertigo;
     private int ballPower;
     private int ballsToAdd;
-    BrickGrid grid;
+    private BrickGrid grid;
     private boolean launched;
     private final PreviewLine line, vertigoLine;
     private final Color ballColor;
@@ -88,7 +88,6 @@ public class PlayingPanel extends JPanel {
                 if (grid.isReadyToEnd()) {
                     closeFrame();
                 }
-
                 repaint();
             }
         });
@@ -323,7 +322,7 @@ public class PlayingPanel extends JPanel {
                                 grid.getGrid()[i][j] = new EmptyObject(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
                             }
                             heart = true;
-                            heart2 = true;
+//                            heart2 = true;
                         } else if (obj instanceof NormalItem && ((NormalItem) obj).getType().equals("")) {
                             obj.onCollision(ballPower);
                             if ((((NormalItem) obj).isReadyToBeDestroyed())) {
